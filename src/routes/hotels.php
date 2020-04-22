@@ -5,9 +5,9 @@ use \Psr\Http\Message\ResponseInterface as Response;
 $app =new \Slim\App;
 //GET Clientes
 
-$app ->get('/api/clientes',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+$app ->get('/api/hotels',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
 
-  $sql = "SELECT * FROM clientes";//Codigo de MYSQL
+  $sql = "SELECT * FROM hotels";//Codigo de MYSQL
   try {
 
     $db =new db();//Se llama a la base de datos
@@ -15,8 +15,8 @@ $app ->get('/api/clientes',function(Request $request, Response $response){//Meto
 
     $resultado = $db->query($sql);//Se hace query
     if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
-      $clientes= $resultado->fetchAll(PDO::FETCH_OBJ);
-      echo json_encode($clientes);//Se muestran los clientes en formato JSON
+      $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
+      echo json_encode($hotels);//Se muestran los clientes en formato JSON
     }else{
       echo json_encode("No existen clientes");
     }
