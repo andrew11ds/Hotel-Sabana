@@ -1,12 +1,12 @@
 <?php
 class db{
-  private $dbHost='localhost';
-  private $dbUser='root';
-  private $dbPass='';
-  private $dbName='yeisonmk';
+  private $dbHost='localhost';//Nombre del host es localhost
+  private $dbUser='root';//Nombre de cuenta es root
+  private $dbPass='';//Contraseña de la base de datos es VACIA para XAAMP
+  private $dbName='sabana_db';
 
 
-  public function connectDB(){
+  public function connectDB(){//Metodo que realiza la conexión con MYSQL y el SLIM
 
     $mysqlConnect ="mysql:host=$this->dbHost;dbname=$this->dbName";
 
