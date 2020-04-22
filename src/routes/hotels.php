@@ -18,7 +18,7 @@ $app ->get('/api/hotels',function(Request $request, Response $response){//Metodo
       $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
       echo json_encode($hotels);//Se muestran los clientes en formato JSON
     }else{
-      echo json_encode("No existen clientes");
+      echo json_encode("No existen hoteles");
     }
     $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
     $db =null;
