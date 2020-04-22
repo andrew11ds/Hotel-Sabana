@@ -3,8 +3,8 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 $app =new \Slim\App;
-//GET Clientes
 
+//GET para todos los hoteles
 $app ->get('/api/hotels',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
 
   $sql = "SELECT * FROM hotels";//Codigo de MYSQL
@@ -16,7 +16,7 @@ $app ->get('/api/hotels',function(Request $request, Response $response){//Metodo
     $resultado = $db->query($sql);//Se hace query
     if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
       $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
-      echo json_encode($hotels);//Se muestran los clientes en formato JSON
+      echo json_encode($hotels);//Se muestran los hoteles en formato JSON
     }else{
       echo json_encode("No existen hoteles");
     }
@@ -28,6 +28,34 @@ $app ->get('/api/hotels',function(Request $request, Response $response){//Metodo
   }
 
 });
+
+//GET para encontrar hotel por su nombre
+$app ->get('/api/hotels/{nameH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $hotel_name = $request -> getAttribute('nameH'); //Aqui obtenemos el nombre que se escriba en la URL
+
+  $sql = "SELECT hotels.name, hotels.id FROM hotels where hotels.name = '$hotel_name'";//Codigo de MYSQL
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+    $resultado = $db->query($sql);//Se hace query
+    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+      $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
+      echo json_encode($hotels);//Se muestran el hotel 
+    }else{
+      echo json_encode("No existen hoteles");
+    }
+    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
+
+});
+
+
 //Crear nuevo cliente
 $app ->post('/api/crearCliente',function(Request $request, Response $response){//Creación de cliente, metodo POST
   $nombre = $request->getParam('nombre');//Se hacen request de los parametros de las columnas
