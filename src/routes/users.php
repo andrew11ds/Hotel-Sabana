@@ -25,6 +25,16 @@ $app ->post('/api/user/newUser',function(Request $request, Response $response){/
     $resultado -> execute();
     echo json_encode("New user saved");
 
+    $sql2 = "SELECT users.id from users order by users.id desc limit 1";
+
+    $resultadoU = $db->query($sql2);//Se hace query
+    if ($resultadoU->rowCount()>0) {//Metodo contador de COLUMNAS
+      $usr= $resultadoU->fetchAll(PDO::FETCH_OBJ);
+      echo json_encode($usr);//Se muestran los hoteles en formato JSON
+    }else{
+      echo json_encode("No existen hoteles");
+    }
+
     $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
     $db =null;
   } catch (PDOException $e) {
