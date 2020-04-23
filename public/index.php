@@ -13,8 +13,8 @@ $app = new \Slim\App;
 //});
 
 //Ruta clientes
-require '../src/routes/hotels.php';//Aqui se llama al php de clientes, debe cambiarse
-
+require '../src/routes/hotels.php';//Aqui se llama al php de hoteles
+require '../src/routes/users.php';//Aqui se llama al php de usuarios
 
 
 
