@@ -30,10 +30,10 @@ $app ->get('/api/hotels',function(Request $request, Response $response){//Metodo
 });
 
 //GET para encontrar hotel por su nombre
-$app ->get('/api/hotels/{nameH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+$app ->get('/api/hotels/name/{nameH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
   $hotel_name = $request -> getAttribute('nameH'); //Aqui obtenemos el nombre que se escriba en la URL
 
-  $sql = "SELECT hotels.name, hotels.id FROM hotels where hotels.name = '$hotel_name'";//Codigo de MYSQL
+  $sql = "SELECT * FROM hotels where hotels.name = '$hotel_name'";//Codigo de MYSQL
   try {
 
     $db =new db();//Se llama a la base de datos
@@ -42,7 +42,7 @@ $app ->get('/api/hotels/{nameH}',function(Request $request, Response $response){
     $resultado = $db->query($sql);//Se hace query
     if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
       $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
-      echo json_encode($hotels);//Se muestran el hotel 
+      echo json_encode($hotels);//Se muestran el hotel
     }else{
       echo json_encode("No existen hoteles");
     }
@@ -54,6 +54,32 @@ $app ->get('/api/hotels/{nameH}',function(Request $request, Response $response){
   }
 
 });
+//Buscar hoteles por estado
+$app ->get('/api/hotels/state/{stateH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $hotel_state = $request -> getAttribute('stateH'); //Aqui obtenemos el nombre que se escriba en la URL
+
+  $sql = "SELECT * FROM hotels where hotels.state = '$hotel_state'";//Codigo de MYSQL
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+    $resultado = $db->query($sql);//Se hace query
+    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+      $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
+      echo json_encode($hotels);//Se muestra el hotel
+    }else{
+      echo json_encode("No existen hoteles");
+    }
+    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
+
+});
+
 
 
 //Crear nuevo cliente
