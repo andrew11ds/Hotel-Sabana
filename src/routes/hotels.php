@@ -78,7 +78,7 @@ $app ->get('/api/hotels/state/{stateH}',function(Request $request, Response $res
   }
 
 });
-
+//Obtener hotel por su tipo
 
 $app ->get('/api/hotels/type/{typeH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
   $hotel_type = $request -> getAttribute('typeH'); //Aqui obtenemos el nombre que se escriba en la URL
@@ -104,7 +104,7 @@ $app ->get('/api/hotels/type/{typeH}',function(Request $request, Response $respo
   }
 
 });
-
+//Obtener hotel por su tamaño
 $app ->get('/api/hotels/size/{sizeH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
   $hotel_size = $request -> getAttribute('sizeH'); //Aqui obtenemos el nombre que se escriba en la URL
 

@@ -1,11 +1,11 @@
 <?php
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-$app1 =new \Slim\App;
+$app =new \Slim\App;
 
 
 
-$app1 ->post('/api/user/newUser',function(Request $request, Response $response){//Creación de cliente, metodo POST
+$app ->post('/api/user/newUser',function(Request $request, Response $response){//Creación de cliente, metodo POST
   $email = $request->getParam('email');//Se hacen request de los parametros de las columnas
   $password = $request->getParam('password');
   $name = $request->getParam('name');
