@@ -1,6 +1,7 @@
 <?php
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+
 $app =new \Slim\App;
 
 //GET para todos los hoteles
@@ -141,6 +142,26 @@ $app ->get('/api/hotels/size/{sizeH}',function(Request $request, Response $respo
 
 });
 
+$app ->get('/api/hotels/location/{lat},{long}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $lati = $request -> getAttribute('lat'); //Aqui obtenemos el nombre que se escriba en la URL
+  $longi = $request -> getAttribute('long');
+
+  $url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lati,$longi&radius=100&type=lodging&key=AIzaSyA8Y4OKo3-YaPVV3xZHrRguxdPupaeoRx0";
+
+  $curl = curl_init();
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_HEADER, false);
+  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($curl, CURLOPT_ENCODING, "");
+  $curlData = curl_exec($curl);
+  curl_close($curl);
+
+  $address = json_decode($curlData);
+
+  echo $address -> results[0] -> name;
+
+});
 
 //Crear nuevo cliente
 $app ->post('/api/crearCliente',function(Request $request, Response $response){//Creación de cliente, metodo POST
