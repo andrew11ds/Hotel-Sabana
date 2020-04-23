@@ -16,6 +16,6 @@ $app = new \Slim\App;
 
 //Ruta clientes
 
-require '../src/routes/users.php';//Aqui se llama al php de usuarios
-//require '../src/routes/hotels.php';//Aqui se llama al php de hoteles , comentar si no se usara post
+//require '../src/routes/users.php';//Aqui se llama al php de usuarios
+require '../src/routes/hotels.php';//Aqui se llama al php de hoteles , comentar si no se usara post
 $app->run();

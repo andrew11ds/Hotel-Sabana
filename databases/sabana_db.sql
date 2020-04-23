@@ -2,10 +2,10 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 23, 2020 at 02:59 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.4
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 23-04-2020 a las 22:51:22
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sabana_db`
+-- Base de datos: `sabana_db`
 --
 CREATE DATABASE IF NOT EXISTS `sabana_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `sabana_db`;
@@ -26,7 +26,20 @@ USE `sabana_db`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hotels`
+-- Estructura de tabla para la tabla `date`
+--
+
+CREATE TABLE `date` (
+  `room_id` int(5) NOT NULL,
+  `date_id` int(10) NOT NULL,
+  `date_start` varchar(10) NOT NULL,
+  `date_end` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `hotels`
 --
 
 CREATE TABLE `hotels` (
@@ -43,7 +56,7 @@ CREATE TABLE `hotels` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `hotels`
+-- Volcado de datos para la tabla `hotels`
 --
 
 INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`, `website`, `type`, `rooms`) VALUES
@@ -353,7 +366,20 @@ INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Estructura de tabla para la tabla `rooms`
+--
+
+CREATE TABLE `rooms` (
+  `hotel_id` int(5) NOT NULL,
+  `room_id` int(5) NOT NULL,
+  `type` varchar(10) NOT NULL,
+  `date_id` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users`
 --
 
 CREATE TABLE `users` (
@@ -366,36 +392,70 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Indexes for dumped tables
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`id`, `email`, `password`, `name`, `last_name`, `address`) VALUES
+(7, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose'),
+(8, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose'),
+(9, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose'),
+(10, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose');
+
+--
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `hotels`
+-- Indices de la tabla `date`
+--
+ALTER TABLE `date`
+  ADD PRIMARY KEY (`date_id`);
+
+--
+-- Indices de la tabla `hotels`
 --
 ALTER TABLE `hotels`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indices de la tabla `rooms`
+--
+ALTER TABLE `rooms`
+  ADD PRIMARY KEY (`room_id`);
+
+--
+-- Indices de la tabla `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `hotels`
+-- AUTO_INCREMENT de la tabla `date`
+--
+ALTER TABLE `date`
+  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `hotels`
 --
 ALTER TABLE `hotels`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT de la tabla `rooms`
+--
+ALTER TABLE `rooms`
+  MODIFY `room_id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
