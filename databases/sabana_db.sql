@@ -2,10 +2,10 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 23-04-2020 a las 00:34:43
--- Versión del servidor: 10.4.11-MariaDB
--- Versión de PHP: 7.4.4
+-- Host: 127.0.0.1
+-- Generation Time: Apr 23, 2020 at 02:59 AM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `sabana_db`
+-- Database: `sabana_db`
 --
 CREATE DATABASE IF NOT EXISTS `sabana_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `sabana_db`;
@@ -26,7 +26,7 @@ USE `sabana_db`;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `hotels`
+-- Table structure for table `hotels`
 --
 
 CREATE TABLE `hotels` (
@@ -43,7 +43,7 @@ CREATE TABLE `hotels` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `hotels`
+-- Dumping data for table `hotels`
 --
 
 INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`, `website`, `type`, `rooms`) VALUES
@@ -350,25 +350,52 @@ INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`,
 (300, 'Country Inn & Suites by Carlson - Haridwar', '\"( Unit of Sens Udyog Pvt. Ltd.)Haripurkalan, Raiwala, Motichur, Haridwar - Rishikesh Highway, Haridwar, Dist. Dehradun - 249205, UTTARAKHAND\"', 'UTTARAKHAND', 135, 135, 'reservations@cisharidwar.com', 'NA', '4 Star', 56),
 (301, 'The Peerless Inn', '\"12J. L. Nehru Road, Kolkata - 700 013, WEST BENGAL\"', 'WEST BENGAL', 33, 33, 'pik@sarovarhotels.com', 'www.peerlesshotels.com', '4 Star', 122);
 
+-- --------------------------------------------------------
+
 --
--- Índices para tablas volcadas
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(20) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(15) NOT NULL,
+  `name` varchar(20) NOT NULL,
+  `last_name` varchar(20) NOT NULL,
+  `address` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `hotels`
+-- Indexes for table `hotels`
 --
 ALTER TABLE `hotels`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `hotels`
+-- AUTO_INCREMENT for table `hotels`
 --
 ALTER TABLE `hotels`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
