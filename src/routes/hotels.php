@@ -142,11 +142,13 @@ $app ->get('/api/hotels/size/{sizeH}',function(Request $request, Response $respo
 
 });
 
-$app ->get('/api/hotels/location/{lat},{long}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
-  $lati = $request -> getAttribute('lat'); //Aqui obtenemos el nombre que se escriba en la URL
-  $longi = $request -> getAttribute('long');
+$app ->get('/api/hotels/location/{lat},{long},{radius}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $lati = $request -> getAttribute('lat'); //Aqui obtenemos la latitud del hotel a buscar
+  $longi = $request -> getAttribute('long');//Aqui obtenemos la longitud del hotel a buscar
+  $radi = $request -> getAttribute('radius');//Obtenemos
 
-  $url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lati,$longi&radius=100&type=lodging&key=AIzaSyA8Y4OKo3-YaPVV3xZHrRguxdPupaeoRx0";
+  //En url se obtiene el json con toda la informacion del lugar a buscar
+  $url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lati,$longi&radius=$radi&type=lodging&key=AIzaSyB71EUVPqSHQT5W8T1L5dZPUND4kSAWF3U";
 
   $curl = curl_init();
   curl_setopt($curl, CURLOPT_URL, $url);
@@ -159,9 +161,30 @@ $app ->get('/api/hotels/location/{lat},{long}',function(Request $request, Respon
 
   $address = json_decode($curlData);
 
-  echo $address -> results[0] -> name;
+  $Hname = $address -> results[0] -> name;
+
+  $sql = "SELECT * FROM hotels where '$Hname' = hotels.name";//Codigo de MYSQL
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+    $resultado = $db->query($sql);//Se hace query
+    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+      $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
+      echo json_encode($hotels);//Se muestran los hoteles en formato JSON
+    }else{
+      echo json_encode("No existen hoteles");
+    }
+    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
 
 });
+
 
 //Crear nuevo cliente
 $app ->post('/api/crearCliente',function(Request $request, Response $response){//Creación de cliente, metodo POST
