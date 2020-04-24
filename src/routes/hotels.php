@@ -461,12 +461,44 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
 
 });
 
-function remover ($valor,$arr)
-{
-    foreach (array_keys($arr, $valor) as $key)
-    {
-        unset($arr[$key]);
+$app ->delete('/api/hotels/reservetion/delete',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $hotelid = $request -> getParam('hotel_id');
+  $room_id = $request -> getParam('room_id');
+  $date_start = $request -> getParam('date_start');
+
+  $sql = "SELECT reservations.date_id FROM reservations where reservations.hotel_id = '$hotelid' and reservations.room_id = '$room_id' and reservations.date_start = '$date_start'";//Codigo de MYSQL
+
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+    $resultado2 = $db->query($sql);
+    $dateid= $resultado2->fetchAll(PDO::FETCH_OBJ);
+    $date_id = $dateid[0]->date_id;
+
+    $sql2 = "DELETE FROM reservations where reservations.hotel_id = $hotelid and reservations.room_id = $room_id and reservations.date_start = '$date_start'";//Codigo de MYSQL
+
+    $resultado = $db->query($sql2);//Se hace query
+
+    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+      echo "Reservacion eliminada.";
+    }else{
+      echo json_encode("No existe la reservacion.");
     }
-    echo "Removiendo: ".$valor."\n\n";
-    return $arr;
-}
+
+    $sql3 = "DELETE from date where date.date_id = '$date_id'";
+
+    $resultado =null;
+    $resultado = $db->query($sql3);//Se hace query
+
+    $resultado =null;
+    $resultado2 =null;
+    $db =null;
+    
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
+
+});
