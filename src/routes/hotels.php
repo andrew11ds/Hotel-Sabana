@@ -461,7 +461,7 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
 
 });
 
-$app ->delete('/api/hotels/reservetion/delete',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+$app ->delete('/api/hotels/reservation/delete',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
   $hotelid = $request -> getParam('hotel_id');
   $room_id = $request -> getParam('room_id');
   $date_start = $request -> getParam('date_start');
@@ -470,8 +470,8 @@ $app ->delete('/api/hotels/reservetion/delete',function(Request $request, Respon
 
   try {
 
-    $db =new db();//Se llama a la base de datos
-    $db =$db ->connectDB();//Se conecta a la base de datos
+    $db =new db();
+    $db =$db ->connectDB();
 
     $resultado2 = $db->query($sql);
     $dateid= $resultado2->fetchAll(PDO::FETCH_OBJ);
@@ -479,9 +479,9 @@ $app ->delete('/api/hotels/reservetion/delete',function(Request $request, Respon
 
     $sql2 = "DELETE FROM reservations where reservations.hotel_id = $hotelid and reservations.room_id = $room_id and reservations.date_start = '$date_start'";//Codigo de MYSQL
 
-    $resultado = $db->query($sql2);//Se hace query
+    $resultado = $db->query($sql2);
 
-    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+    if ($resultado->rowCount()>0) {
       echo "Reservacion eliminada.";
     }else{
       echo json_encode("No existe la reservacion.");
@@ -490,7 +490,7 @@ $app ->delete('/api/hotels/reservetion/delete',function(Request $request, Respon
     $sql3 = "DELETE from date where date.date_id = '$date_id'";
 
     $resultado =null;
-    $resultado = $db->query($sql3);//Se hace query
+    $resultado = $db->query($sql3);
 
     $resultado =null;
     $resultado2 =null;
@@ -502,8 +502,8 @@ $app ->delete('/api/hotels/reservetion/delete',function(Request $request, Respon
   }
 
 });
-
-$app ->put('/api/hotels/updateHotel/{idH}',function(Request $request, Response $response){//Creación de cliente, metodo POST
+//Actualización de hotel en la base de datos
+$app ->put('/api/hotels/updateHotel/{idH}',function(Request $request, Response $response){
   $id_hotel=$request->getAttribute('idH');
   $type = $request->getParam('type');
   $rooms = $request->getParam('rooms');
@@ -532,12 +532,12 @@ $app ->put('/api/hotels/updateHotel/{idH}',function(Request $request, Response $
     echo json_encode("Hotel updated(1)" . PHP_EOL);
     $resultado =null;
     $sql2 = "DELETE FROM rooms WHERE rooms.hotel_id='$id_hotel'";
-    $resultado = $db->query($sql2);//Se hace query
-    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $resultado = $db->query($sql2);
+    $resultado =null;
     $sql2=null;
     $sql2="DELETE FROM reservations WHERE reservations.hotel_id='$id_hotel'";
-    $resultado = $db->query($sql2);//Se hace query
-    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $resultado = $db->query($sql2);
+    $resultado =null;
     $sql2=null;
     $sql2="DELETE FROM date WHERE  date.hotel_id='$id_hotel'";
     $resultado = $db->query($sql2);//Se hace query
@@ -601,12 +601,52 @@ $app ->put('/api/hotels/updateHotel/{idH}',function(Request $request, Response $
   $resultado2 -> execute();
   $resultado2=null;
 }
-    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $resultado =null;
     $db =null;
     echo ("Rooms updated: 30% single rooms, 60% double rooms , 10% suites");
   } catch (PDOException $e) {
     echo("User not updated(0)");
     echo '{"error" :{"text":'.$e->getMessage().'}';//Tiene error y lo muestra
+
+  }
+
+});
+//Eliminar un hotel
+
+$app ->delete('/api/hotels/deleteHotel/{idH}',function(Request $request, Response $response){
+  $id_hotel=$request->getAttribute('idH');
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+
+
+    $sql2 = "DELETE FROM hotels WHERE hotels.id = '$id_hotel'";
+    $sql3 = "DELETE FROM rooms WHERE rooms.hotel_id = '$id_hotel'";
+    $sql4 = "DELETE FROM reservations WHERE reservations.hotel_id = '$id_hotel'";
+    $sql5 = "DELETE FROM date WHERE date.hotel_id = '$id_hotel'";
+    $resultado = $db->query($sql2);
+    if ($resultado->rowCount()>0) {
+      echo "Hotel has been erased successfully.";
+    }else{
+      echo "Hotel does not exist";
+    }
+    $resultado=null;
+    $resultado = $db->query($sql3);
+    $resultado=null;
+    $resultado = $db->query($sql4);
+    $resultado=null;
+    $resultado = $db->query($sql5);
+
+
+
+
+  $resultado=null;
+    $db =null;
+
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
 
   }
 
