@@ -298,3 +298,88 @@ $app ->post('/api/hotels/newHotel',function(Request $request, Response $response
   }
 
 });
+
+$app ->post('/api/hotels/reserve',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $hotelid = $request -> getParam('hotel_id');
+  $userid = $request -> getParam('user_id');
+  $cant = $request -> getParam('cant');
+  $room_type = $request -> getParam('room_type');
+  $dstart = $request -> getParam('start_date');
+  $dend = $request -> getParam('end_date');
+
+  $sql = "SELECT hotels.id, rooms.room_id, date.date_start, date.date_end FROM hotels join rooms on hotels.id = rooms.hotel_id join date on date.room_id = rooms.room_id where hotels.id = '$hotelid' and rooms.room_type = '$room_type'";//Codigo de MYSQL
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+    $resultado = $db->query($sql);//Se hace query
+    $roomR = array();
+    $j=0;
+    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+      $hotels = $resultado->fetchAll(PDO::FETCH_OBJ);
+      for ($i=0; $i < count($hotels) ; $i++) {
+        $s = $hotels[$i]->date_start;
+        $e = $hotels[$i]->date_end;
+        $cs = strtotime($s);
+        $ce = strtotime($e);
+
+        $cdstart = strtotime($dstart);
+        $cdend = strtotime($dend);
+
+        if((($cdstart<$cs and $cdstart<$ce) and ($cdend<$cs and $cdend<$ce)) or (($cdstart>$cs and $cdstart>$ce) and ($cdend>$cs and $cdend>$ce))){
+        }else{
+          $roomR[$j] = $hotels[$i]->room_id;
+          $j = $j + 1;
+        }
+      }
+
+      $roomT=array();
+
+      for ($i=0; $i <count($hotels) ; $i++) {
+        $roomT[$i] = $hotels[$i]->room_id;
+      }
+
+      $roomT = array_values(array_diff($roomT,$roomR));
+
+      $roomid = $roomT[0];
+
+      if($roomid > 0){
+        $sql2 = "INSERT INTO  date (hotel_id,room_id,date_start, date_end) VALUES
+        (:hotelid,:roomid,:dstart,:dend)";
+
+        $resultado3 = $db->prepare($sql2);
+        $resultado3 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
+        $resultado3 ->bindParam(':roomid',$roomid);
+        $resultado3 ->bindParam(':dstart',$dstart);
+        $resultado3 ->bindParam(':dend',$dend);
+        $resultado3 -> execute();
+        echo "Fecha programada";
+
+
+      }else{
+        echo "F";
+      }
+
+
+    }else{
+      echo json_encode("No hay reservas");
+    }
+    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
+
+});
+
+function remover ($valor,$arr)
+{
+    foreach (array_keys($arr, $valor) as $key)
+    {
+        unset($arr[$key]);
+    }
+    echo "Removiendo: ".$valor."\n\n";
+    return $arr;
+}

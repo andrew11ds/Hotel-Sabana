@@ -2,10 +2,10 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 24, 2020 at 04:47 AM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.4
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 24-04-2020 a las 07:26:44
+-- Versión del servidor: 10.4.11-MariaDB
+-- Versión de PHP: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sabana_db`
+-- Base de datos: `sabana_db`
 --
 CREATE DATABASE IF NOT EXISTS `sabana_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `sabana_db`;
@@ -26,28 +26,33 @@ USE `sabana_db`;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `date`
+-- Estructura de tabla para la tabla `date`
 --
 
 CREATE TABLE `date` (
   `date_id` int(10) NOT NULL,
   `hotel_id` int(10) NOT NULL,
   `room_id` int(5) NOT NULL,
-  `date_start` varchar(10) NOT NULL,
-  `date_end` varchar(10) NOT NULL
+  `date_start` varchar(50) NOT NULL,
+  `date_end` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `date`
+-- Volcado de datos para la tabla `date`
 --
 
 INSERT INTO `date` (`date_id`, `hotel_id`, `room_id`, `date_start`, `date_end`) VALUES
-(1, 1, 5, '24-04-2020', '25-04.2020');
+(2, 1, 5, '10 April 2020', '15 April 2020'),
+(3, 1, 5, '5 February 2020', '10 February 2020'),
+(4, 1, 7, '31 May 2020', '3 June 2020'),
+(5, 1, 8, '7 September 2020', '8 September 2020'),
+(7, 1, 8, '7 February 2020', '8 February 2020'),
+(15, 1, 7, '7 February 2020', '8 February 2020');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hotels`
+-- Estructura de tabla para la tabla `hotels`
 --
 
 CREATE TABLE `hotels` (
@@ -64,7 +69,7 @@ CREATE TABLE `hotels` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `hotels`
+-- Volcado de datos para la tabla `hotels`
 --
 
 INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`, `website`, `type`, `rooms`) VALUES
@@ -375,7 +380,26 @@ INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rooms`
+-- Estructura de tabla para la tabla `reservations`
+--
+
+CREATE TABLE `reservations` (
+  `reservation_id` int(20) NOT NULL,
+  `hotel_id` int(5) NOT NULL,
+  `room_id` int(10) NOT NULL,
+  `room_type` varchar(10) NOT NULL,
+  `user_id` int(20) NOT NULL,
+  `lodgers` int(5) NOT NULL,
+  `date_id` int(10) NOT NULL,
+  `date_start` varchar(50) NOT NULL,
+  `date_end` varchar(50) NOT NULL,
+  `price` int(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rooms`
 --
 
 CREATE TABLE `rooms` (
@@ -385,7 +409,7 @@ CREATE TABLE `rooms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `rooms`
+-- Volcado de datos para la tabla `rooms`
 --
 
 INSERT INTO `rooms` (`hotel_id`, `room_id`, `room_type`) VALUES
@@ -33562,7 +33586,7 @@ INSERT INTO `rooms` (`hotel_id`, `room_id`, `room_type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Estructura de tabla para la tabla `users`
 --
 
 CREATE TABLE `users` (
@@ -33575,7 +33599,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `users`
+-- Volcado de datos para la tabla `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `name`, `last_name`, `address`) VALUES
@@ -33585,45 +33609,57 @@ INSERT INTO `users` (`id`, `email`, `password`, `name`, `last_name`, `address`) 
 (10, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose');
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `date`
+-- Indices de la tabla `date`
 --
 ALTER TABLE `date`
   ADD PRIMARY KEY (`date_id`);
 
 --
--- Indexes for table `hotels`
+-- Indices de la tabla `hotels`
 --
 ALTER TABLE `hotels`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users`
+-- Indices de la tabla `reservations`
+--
+ALTER TABLE `reservations`
+  ADD PRIMARY KEY (`reservation_id`);
+
+--
+-- Indices de la tabla `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `date`
+-- AUTO_INCREMENT de la tabla `date`
 --
 ALTER TABLE `date`
-  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT for table `hotels`
+-- AUTO_INCREMENT de la tabla `hotels`
 --
 ALTER TABLE `hotels`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT de la tabla `reservations`
+--
+ALTER TABLE `reservations`
+  MODIFY `reservation_id` int(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
