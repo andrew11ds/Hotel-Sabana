@@ -495,9 +495,118 @@ $app ->delete('/api/hotels/reservetion/delete',function(Request $request, Respon
     $resultado =null;
     $resultado2 =null;
     $db =null;
-    
+
   } catch (PDOException $e) {
     echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
+
+});
+
+$app ->put('/api/hotels/updateHotel/{idH}',function(Request $request, Response $response){//Creación de cliente, metodo POST
+  $id_hotel=$request->getAttribute('idH');
+  $type = $request->getParam('type');
+  $rooms = $request->getParam('rooms');
+  $phone= $request->getParam('phone');
+  $website = $request->getParam('website');
+  $email = $request->getParam('email');
+  $sql = "UPDATE hotels SET
+        phone=:phone,
+        email=:email,
+        website=:website,
+        type=:type,
+        rooms=:rooms
+        WHERE id=$id_hotel";
+
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();
+    $resultado = $db->prepare($sql);
+    $resultado ->bindParam(':phone',$phone);
+    $resultado ->bindParam(':email',$email);//Se hacen bindeos al resultado para guardarlo en la base de datos
+    $resultado ->bindParam(':website',$website);
+    $resultado ->bindParam(':type',$type);
+    $resultado ->bindParam(':rooms',$rooms);
+    $resultado -> execute();
+    echo json_encode("Hotel updated(1)" . PHP_EOL);
+    $resultado =null;
+    $sql2 = "DELETE FROM rooms WHERE rooms.hotel_id='$id_hotel'";
+    $resultado = $db->query($sql2);//Se hace query
+    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $sql2=null;
+    $sql2="DELETE FROM reservations WHERE reservations.hotel_id='$id_hotel'";
+    $resultado = $db->query($sql2);//Se hace query
+    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $sql2=null;
+    $sql2="DELETE FROM date WHERE  date.hotel_id='$id_hotel'";
+    $resultado = $db->query($sql2);//Se hace query
+    $id=$id_hotel;
+    $sql2=null;
+    $resultadoU=null;
+    $singleR=$rooms*0.3;//Se calcula los cuartos dependiendo de los porcentajes
+    $doubleR=$rooms*0.6;
+    $suiteR=$rooms*0.1;
+    if ($singleR-intval($singleR)<=0.5) {
+      $singleR=intval($singleR);
+    }else{
+      $singleR=intval($singleR)+1;
+    }
+
+    if ($doubleR-intval($doubleR)<=0.5) {
+      $doubleR=intval($doubleR);
+    }else{
+      $doubleR=intval($doubleR)+1;
+    }
+
+    if ($suiteR-intval($suiteR)<=0.5) {
+      $suiteR=intval($suiteR);
+    }else{
+      $suiteR=intval($suiteR)+1;
+    }
+    $totalRooms=$singleR+$doubleR+$suiteR;
+    $doubleR=$rooms-$totalRooms+$doubleR;
+    $single='single';
+    $double='double';
+    $suite='suite';
+   for ($i = 1; $i <=$singleR ; $i++) {
+    $sql2 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+    (:id,:i,:single)";
+     $resultado2= $db->prepare($sql2);
+     $resultado2 ->bindParam(':id',$id);
+     $resultado2->bindParam(':i',$i);
+     $resultado2 ->bindParam(':single',$single);
+     $resultado2 -> execute();
+     $resultado2=null;
+  }
+
+  for ($k = $i; $k <=$singleR+$doubleR ; $k++) {
+   $sql3 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+   (:id,:k,:double)";
+   $resultado2= $db->prepare($sql3);
+   $resultado2 ->bindParam(':id',$id);
+   $resultado2->bindParam(':k',$k);
+   $resultado2 ->bindParam(':double',$double);
+   $resultado2 -> execute();
+   $resultado2=null;
+ }
+
+ for ($j = $k; $j <=$singleR+$doubleR+$suiteR ; $j++) {
+  $sql4 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+  (:id,:j,:suite)";
+  $resultado2= $db->prepare($sql4);
+  $resultado2 ->bindParam(':id',$id);
+  $resultado2->bindParam(':j',$j);
+  $resultado2 ->bindParam(':suite',$suite);
+  $resultado2 -> execute();
+  $resultado2=null;
+}
+    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $db =null;
+    echo ("Rooms updated: 30% single rooms, 60% double rooms , 10% suites");
+  } catch (PDOException $e) {
+    echo("User not updated(0)");
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Tiene error y lo muestra
 
   }
 
