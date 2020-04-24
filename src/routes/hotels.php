@@ -342,7 +342,11 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
 
       $roomT = array_values(array_diff($roomT,$roomR));
 
-      $roomid = $roomT[0];
+      $roomid = 0;
+
+      if (!empty($roomT)) {
+        $roomid = $roomT[0];
+      }
 
       if($roomid > 0){
         $sql2 = "INSERT INTO  date (hotel_id,room_id,date_start, date_end) VALUES
@@ -354,11 +358,94 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $resultado3 ->bindParam(':dstart',$dstart);
         $resultado3 ->bindParam(':dend',$dend);
         $resultado3 -> execute();
-        echo "Fecha programada";
+        echo "Fecha programada".PHP_EOL;
 
+        $sql2 = null;
+        $sql2 = "SELECT date.date_id from date order by date.date_id desc limit 1";
+
+        $resultado5 = $db->query($sql2);
+        $dateR= $resultado5->fetchAll(PDO::FETCH_OBJ);
+        $dateid = $dateR[0]->date_id;
+
+        $sql2 = null;
+        $sql2 = "SELECT hotels.rooms from hotels where hotels.id = '$hotelid'";
+
+        $resultado6 = $db->query($sql2);
+        $croom= $resultado6->fetchAll(PDO::FETCH_OBJ);
+        $tam = $croom[0]->rooms;
+
+        $price = 0;
+
+        if ($tam <= 50) {
+          if ($room_type == 'single') {
+            $price = 50;
+          }
+          if ($room_type == 'double') {
+            $price = 70;
+          }
+          if ($room_type == 'suite') {
+            $price = 130;
+          }
+        }
+
+        if ($tam >= 51 and $tam <= 100) {
+          if ($room_type == 'single') {
+            $price = 70;
+          }
+          if ($room_type == 'double') {
+            $price = 100;
+          }
+          if ($room_type == 'suite') {
+            $price = 200;
+          }
+        }
+
+        if ($tam > 100) {
+          if ($room_type == 'single') {
+            $price = 90;
+          }
+          if ($room_type == 'double') {
+            $price = 120;
+          }
+          if ($room_type == 'suite') {
+            $price = 500;
+          }
+        }
+
+        $sql2 = null;
+        $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_id,date_start,date_end,price) VALUES
+        (:hotelid,:roomid,:room_type,:userid,:cant,:dateid,:dstart,:dend,:price)";
+
+        $resultado7 = $db->prepare($sql2);
+        $resultado7 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
+        $resultado7 ->bindParam(':roomid',$roomid);
+        $resultado7 ->bindParam(':room_type',$room_type);
+        $resultado7 ->bindParam(':userid',$userid);
+        $resultado7 ->bindParam(':cant',$cant);
+        $resultado7 ->bindParam(':dateid',$dateid);
+        $resultado7 ->bindParam(':dstart',$dstart);
+        $resultado7 ->bindParam(':dend',$dend);
+        $resultado7 ->bindParam(':price',$price);
+        $resultado7 -> execute();
+        echo "Reservacion hecha ". PHP_EOL;
+
+        $sql2 = null;
+        $sql2 = "SELECT reservations.reservation_id from reservations order by reservations.reservation_id desc limit 1";
+
+        $resultado8 = $db->query($sql2);
+        $res= $resultado8->fetchAll(PDO::FETCH_OBJ);
+        $resid = $res[0]->reservation_id;
+
+        echo "Id de la reservacion: ". $resid . " Price: ".$price;
+
+        $resultado3 = null;
+        $resultado5 = null;
+        $resultado6 = null;
+        $resultado7 = null;
+        $resultado8 = null;
 
       }else{
-        echo "F";
+        echo "No es posible realizar la reservacion.";
       }
 
 
