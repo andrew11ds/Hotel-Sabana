@@ -2,10 +2,10 @@
 -- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 24-04-2020 a las 02:11:13
--- Versión del servidor: 10.4.11-MariaDB
--- Versión de PHP: 7.4.4
+-- Host: 127.0.0.1
+-- Generation Time: Apr 24, 2020 at 04:47 AM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `sabana_db`
+-- Database: `sabana_db`
 --
 CREATE DATABASE IF NOT EXISTS `sabana_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `sabana_db`;
@@ -26,28 +26,28 @@ USE `sabana_db`;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `date`
+-- Table structure for table `date`
 --
 
 CREATE TABLE `date` (
+  `date_id` int(10) NOT NULL,
   `hotel_id` int(10) NOT NULL,
   `room_id` int(5) NOT NULL,
-  `date_id` int(10) NOT NULL,
   `date_start` varchar(10) NOT NULL,
   `date_end` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `date`
+-- Dumping data for table `date`
 --
 
-INSERT INTO `date` (`hotel_id`, `room_id`, `date_id`, `date_start`, `date_end`) VALUES
-(1, 5, 1, '24-04-2020', '25-04.2020');
+INSERT INTO `date` (`date_id`, `hotel_id`, `room_id`, `date_start`, `date_end`) VALUES
+(1, 1, 5, '24-04-2020', '25-04.2020');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `hotels`
+-- Table structure for table `hotels`
 --
 
 CREATE TABLE `hotels` (
@@ -64,7 +64,7 @@ CREATE TABLE `hotels` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `hotels`
+-- Dumping data for table `hotels`
 --
 
 INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`, `website`, `type`, `rooms`) VALUES
@@ -369,12 +369,13 @@ INSERT INTO `hotels` (`id`, `name`, `address`, `state`, `phone`, `fax`, `email`,
 (298, 'Hotel Raj Park (P) Ltd.', '\"180, T.T.K. Road Alwarpet,Chennai - 600018, TAMIL NADU\"', 'TAMIL NADU', 44, 44, 'reservation@rajparkchennai.com', 'www.rajpark.com', '4 Star', 89),
 (299, 'Fortune Inn Grazia', '\"(Unit of Angel Baby Products Pvt. Ltd) Plot NO.1 A, Block - 1Sector - 27 Noida, UTTAR PRADESH\"', 'UTTAR PRADESH', 1203988444, 1203380144, 'gm.roc.nm@royalorchidhotels.com', 'royalorchidhotels.com', '4 Star', 42),
 (300, 'Country Inn & Suites by Carlson - Haridwar', '\"( Unit of Sens Udyog Pvt. Ltd.)Haripurkalan, Raiwala, Motichur, Haridwar - Rishikesh Highway, Haridwar, Dist. Dehradun - 249205, UTTARAKHAND\"', 'UTTARAKHAND', 135, 135, 'reservations@cisharidwar.com', 'NA', '4 Star', 56),
-(301, 'The Peerless Inn', '\"12J. L. Nehru Road, Kolkata - 700 013, WEST BENGAL\"', 'WEST BENGAL', 33, 33, 'pik@sarovarhotels.com', 'www.peerlesshotels.com', '4 Star', 122);
+(301, 'The Peerless Inn', '\"12J. L. Nehru Road, Kolkata - 700 013, WEST BENGAL\"', 'WEST BENGAL', 33, 33, 'pik@sarovarhotels.com', 'www.peerlesshotels.com', '4 Star', 122),
+(302, 'Hilton Cartagena', 'Avenida Almirante Brion, Cartagena, Bolívar', 'Bolivar', 2147483647, 2147483647, 'hilton@cartagena.com', 'https://www.hiltonhotels.com/es_XM/colombia/hilton-cartagena-hotel/', '4 Star', 341);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `rooms`
+-- Table structure for table `rooms`
 --
 
 CREATE TABLE `rooms` (
@@ -384,7 +385,7 @@ CREATE TABLE `rooms` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `rooms`
+-- Dumping data for table `rooms`
 --
 
 INSERT INTO `rooms` (`hotel_id`, `room_id`, `room_type`) VALUES
@@ -33215,12 +33216,353 @@ INSERT INTO `rooms` (`hotel_id`, `room_id`, `room_type`) VALUES
 (301, 120, 'suite'),
 (301, 121, 'suite'),
 (301, 122, 'suite'),
-(1, 1, 'single');
+(1, 1, 'single'),
+(302, 1, 'single'),
+(302, 2, 'single'),
+(302, 3, 'single'),
+(302, 4, 'single'),
+(302, 5, 'single'),
+(302, 6, 'single'),
+(302, 7, 'single'),
+(302, 8, 'single'),
+(302, 9, 'single'),
+(302, 10, 'single'),
+(302, 11, 'single'),
+(302, 12, 'single'),
+(302, 13, 'single'),
+(302, 14, 'single'),
+(302, 15, 'single'),
+(302, 16, 'single'),
+(302, 17, 'single'),
+(302, 18, 'single'),
+(302, 19, 'single'),
+(302, 20, 'single'),
+(302, 21, 'single'),
+(302, 22, 'single'),
+(302, 23, 'single'),
+(302, 24, 'single'),
+(302, 25, 'single'),
+(302, 26, 'single'),
+(302, 27, 'single'),
+(302, 28, 'single'),
+(302, 29, 'single'),
+(302, 30, 'single'),
+(302, 31, 'single'),
+(302, 32, 'single'),
+(302, 33, 'single'),
+(302, 34, 'single'),
+(302, 35, 'single'),
+(302, 36, 'single'),
+(302, 37, 'single'),
+(302, 38, 'single'),
+(302, 39, 'single'),
+(302, 40, 'single'),
+(302, 41, 'single'),
+(302, 42, 'single'),
+(302, 43, 'single'),
+(302, 44, 'single'),
+(302, 45, 'single'),
+(302, 46, 'single'),
+(302, 47, 'single'),
+(302, 48, 'single'),
+(302, 49, 'single'),
+(302, 50, 'single'),
+(302, 51, 'single'),
+(302, 52, 'single'),
+(302, 53, 'single'),
+(302, 54, 'single'),
+(302, 55, 'single'),
+(302, 56, 'single'),
+(302, 57, 'single'),
+(302, 58, 'single'),
+(302, 59, 'single'),
+(302, 60, 'single'),
+(302, 61, 'single'),
+(302, 62, 'single'),
+(302, 63, 'single'),
+(302, 64, 'single'),
+(302, 65, 'single'),
+(302, 66, 'single'),
+(302, 67, 'single'),
+(302, 68, 'single'),
+(302, 69, 'single'),
+(302, 70, 'single'),
+(302, 71, 'single'),
+(302, 72, 'single'),
+(302, 73, 'single'),
+(302, 74, 'single'),
+(302, 75, 'single'),
+(302, 76, 'single'),
+(302, 77, 'single'),
+(302, 78, 'single'),
+(302, 79, 'single'),
+(302, 80, 'single'),
+(302, 81, 'single'),
+(302, 82, 'single'),
+(302, 83, 'single'),
+(302, 84, 'single'),
+(302, 85, 'single'),
+(302, 86, 'single'),
+(302, 87, 'single'),
+(302, 88, 'single'),
+(302, 89, 'single'),
+(302, 90, 'single'),
+(302, 91, 'single'),
+(302, 92, 'single'),
+(302, 93, 'single'),
+(302, 94, 'single'),
+(302, 95, 'single'),
+(302, 96, 'single'),
+(302, 97, 'single'),
+(302, 98, 'single'),
+(302, 99, 'single'),
+(302, 100, 'single'),
+(302, 101, 'single'),
+(302, 102, 'single'),
+(302, 103, 'double'),
+(302, 104, 'double'),
+(302, 105, 'double'),
+(302, 106, 'double'),
+(302, 107, 'double'),
+(302, 108, 'double'),
+(302, 109, 'double'),
+(302, 110, 'double'),
+(302, 111, 'double'),
+(302, 112, 'double'),
+(302, 113, 'double'),
+(302, 114, 'double'),
+(302, 115, 'double'),
+(302, 116, 'double'),
+(302, 117, 'double'),
+(302, 118, 'double'),
+(302, 119, 'double'),
+(302, 120, 'double'),
+(302, 121, 'double'),
+(302, 122, 'double'),
+(302, 123, 'double'),
+(302, 124, 'double'),
+(302, 125, 'double'),
+(302, 126, 'double'),
+(302, 127, 'double'),
+(302, 128, 'double'),
+(302, 129, 'double'),
+(302, 130, 'double'),
+(302, 131, 'double'),
+(302, 132, 'double'),
+(302, 133, 'double'),
+(302, 134, 'double'),
+(302, 135, 'double'),
+(302, 136, 'double'),
+(302, 137, 'double'),
+(302, 138, 'double'),
+(302, 139, 'double'),
+(302, 140, 'double'),
+(302, 141, 'double'),
+(302, 142, 'double'),
+(302, 143, 'double'),
+(302, 144, 'double'),
+(302, 145, 'double'),
+(302, 146, 'double'),
+(302, 147, 'double'),
+(302, 148, 'double'),
+(302, 149, 'double'),
+(302, 150, 'double'),
+(302, 151, 'double'),
+(302, 152, 'double'),
+(302, 153, 'double'),
+(302, 154, 'double'),
+(302, 155, 'double'),
+(302, 156, 'double'),
+(302, 157, 'double'),
+(302, 158, 'double'),
+(302, 159, 'double'),
+(302, 160, 'double'),
+(302, 161, 'double'),
+(302, 162, 'double'),
+(302, 163, 'double'),
+(302, 164, 'double'),
+(302, 165, 'double'),
+(302, 166, 'double'),
+(302, 167, 'double'),
+(302, 168, 'double'),
+(302, 169, 'double'),
+(302, 170, 'double'),
+(302, 171, 'double'),
+(302, 172, 'double'),
+(302, 173, 'double'),
+(302, 174, 'double'),
+(302, 175, 'double'),
+(302, 176, 'double'),
+(302, 177, 'double'),
+(302, 178, 'double'),
+(302, 179, 'double'),
+(302, 180, 'double'),
+(302, 181, 'double'),
+(302, 182, 'double'),
+(302, 183, 'double'),
+(302, 184, 'double'),
+(302, 185, 'double'),
+(302, 186, 'double'),
+(302, 187, 'double'),
+(302, 188, 'double'),
+(302, 189, 'double'),
+(302, 190, 'double'),
+(302, 191, 'double'),
+(302, 192, 'double'),
+(302, 193, 'double'),
+(302, 194, 'double'),
+(302, 195, 'double'),
+(302, 196, 'double'),
+(302, 197, 'double'),
+(302, 198, 'double'),
+(302, 199, 'double'),
+(302, 200, 'double'),
+(302, 201, 'double'),
+(302, 202, 'double'),
+(302, 203, 'double'),
+(302, 204, 'double'),
+(302, 205, 'double'),
+(302, 206, 'double'),
+(302, 207, 'double'),
+(302, 208, 'double'),
+(302, 209, 'double'),
+(302, 210, 'double'),
+(302, 211, 'double'),
+(302, 212, 'double'),
+(302, 213, 'double'),
+(302, 214, 'double'),
+(302, 215, 'double'),
+(302, 216, 'double'),
+(302, 217, 'double'),
+(302, 218, 'double'),
+(302, 219, 'double'),
+(302, 220, 'double'),
+(302, 221, 'double'),
+(302, 222, 'double'),
+(302, 223, 'double'),
+(302, 224, 'double'),
+(302, 225, 'double'),
+(302, 226, 'double'),
+(302, 227, 'double'),
+(302, 228, 'double'),
+(302, 229, 'double'),
+(302, 230, 'double'),
+(302, 231, 'double'),
+(302, 232, 'double'),
+(302, 233, 'double'),
+(302, 234, 'double'),
+(302, 235, 'double'),
+(302, 236, 'double'),
+(302, 237, 'double'),
+(302, 238, 'double'),
+(302, 239, 'double'),
+(302, 240, 'double'),
+(302, 241, 'double'),
+(302, 242, 'double'),
+(302, 243, 'double'),
+(302, 244, 'double'),
+(302, 245, 'double'),
+(302, 246, 'double'),
+(302, 247, 'double'),
+(302, 248, 'double'),
+(302, 249, 'double'),
+(302, 250, 'double'),
+(302, 251, 'double'),
+(302, 252, 'double'),
+(302, 253, 'double'),
+(302, 254, 'double'),
+(302, 255, 'double'),
+(302, 256, 'double'),
+(302, 257, 'double'),
+(302, 258, 'double'),
+(302, 259, 'double'),
+(302, 260, 'double'),
+(302, 261, 'double'),
+(302, 262, 'double'),
+(302, 263, 'double'),
+(302, 264, 'double'),
+(302, 265, 'double'),
+(302, 266, 'double'),
+(302, 267, 'double'),
+(302, 268, 'double'),
+(302, 269, 'double'),
+(302, 270, 'double'),
+(302, 271, 'double'),
+(302, 272, 'double'),
+(302, 273, 'double'),
+(302, 274, 'double'),
+(302, 275, 'double'),
+(302, 276, 'double'),
+(302, 277, 'double'),
+(302, 278, 'double'),
+(302, 279, 'double'),
+(302, 280, 'double'),
+(302, 281, 'double'),
+(302, 282, 'double'),
+(302, 283, 'double'),
+(302, 284, 'double'),
+(302, 285, 'double'),
+(302, 286, 'double'),
+(302, 287, 'double'),
+(302, 288, 'double'),
+(302, 289, 'double'),
+(302, 290, 'double'),
+(302, 291, 'double'),
+(302, 292, 'double'),
+(302, 293, 'double'),
+(302, 294, 'double'),
+(302, 295, 'double'),
+(302, 296, 'double'),
+(302, 297, 'double'),
+(302, 298, 'double'),
+(302, 299, 'double'),
+(302, 300, 'double'),
+(302, 301, 'double'),
+(302, 302, 'double'),
+(302, 303, 'double'),
+(302, 304, 'double'),
+(302, 305, 'double'),
+(302, 306, 'double'),
+(302, 307, 'double'),
+(302, 308, 'suite'),
+(302, 309, 'suite'),
+(302, 310, 'suite'),
+(302, 311, 'suite'),
+(302, 312, 'suite'),
+(302, 313, 'suite'),
+(302, 314, 'suite'),
+(302, 315, 'suite'),
+(302, 316, 'suite'),
+(302, 317, 'suite'),
+(302, 318, 'suite'),
+(302, 319, 'suite'),
+(302, 320, 'suite'),
+(302, 321, 'suite'),
+(302, 322, 'suite'),
+(302, 323, 'suite'),
+(302, 324, 'suite'),
+(302, 325, 'suite'),
+(302, 326, 'suite'),
+(302, 327, 'suite'),
+(302, 328, 'suite'),
+(302, 329, 'suite'),
+(302, 330, 'suite'),
+(302, 331, 'suite'),
+(302, 332, 'suite'),
+(302, 333, 'suite'),
+(302, 334, 'suite'),
+(302, 335, 'suite'),
+(302, 336, 'suite'),
+(302, 337, 'suite'),
+(302, 338, 'suite'),
+(302, 339, 'suite'),
+(302, 340, 'suite'),
+(302, 341, 'suite');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -33233,7 +33575,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `name`, `last_name`, `address`) VALUES
@@ -33243,45 +33585,45 @@ INSERT INTO `users` (`id`, `email`, `password`, `name`, `last_name`, `address`) 
 (10, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose');
 
 --
--- Índices para tablas volcadas
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `date`
+-- Indexes for table `date`
 --
 ALTER TABLE `date`
   ADD PRIMARY KEY (`date_id`);
 
 --
--- Indices de la tabla `hotels`
+-- Indexes for table `hotels`
 --
 ALTER TABLE `hotels`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT de las tablas volcadas
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT de la tabla `date`
+-- AUTO_INCREMENT for table `date`
 --
 ALTER TABLE `date`
   MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `hotels`
+-- AUTO_INCREMENT for table `hotels`
 --
 ALTER TABLE `hotels`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
 
 --
--- AUTO_INCREMENT de la tabla `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;

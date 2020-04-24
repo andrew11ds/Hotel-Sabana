@@ -30,11 +30,11 @@ $app ->post('/api/user/newUser',function(Request $request, Response $response){/
     $resultadoU = $db->query($sql2);//Se hace query
     if ($resultadoU->rowCount()>0) {//Metodo contador de COLUMNAS
       $usr= $resultadoU->fetchAll(PDO::FETCH_OBJ);
-      echo json_encode($usr);//Se muestran los hoteles en formato JSON
+      echo json_encode($usr);
     }else{
-      echo json_encode("No existen hoteles");
+      echo json_encode("No existe este usuario");
     }
-
+    $resultadoU=null;
     $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
     $db =null;
   } catch (PDOException $e) {

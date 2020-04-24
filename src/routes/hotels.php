@@ -186,33 +186,112 @@ $app ->get('/api/hotels/location/{lat},{long},{radius}',function(Request $reques
 });
 
 
-//Crear nuevo cliente
-$app ->post('/api/crearCliente',function(Request $request, Response $response){//Creación de cliente, metodo POST
-  $nombre = $request->getParam('nombre');//Se hacen request de los parametros de las columnas
-  $apellidos = $request->getParam('apellidos');
-  $telefono = $request->getParam('telefono');
-  $email= $request->getParam('email');
-  $direccion = $request->getParam('direccion');
-  $ciudad = $request->getParam('ciudad');
-  $sql = "INSERT INTO  clientes(nombre,apellidos,telefono,email,direccion,ciudad) VALUES
-  (:nombre,:apellidos,:telefono,:email,:direccion,:ciudad)";//Se  hace el query que inserta en la tabla de la base de datos
+
+
+//Crear nuevo hotel con sus cuartos
+$app ->post('/api/hotels/newHotel',function(Request $request, Response $response){//Creación de hotel, metodo POST
+  $name = $request->getParam('name');//Se hacen request de los parametros de las columnas
+  $address = $request->getParam('address');
+  $state = $request->getParam('state');
+  $phone= $request->getParam('phone');
+  $fax = $request->getParam('fax');
+  $email = $request->getParam('email');
+  $website = $request->getParam('website');
+  $type = $request->getParam('type');
+  $rooms = $request->getParam('rooms');
+  $sql = "INSERT INTO  hotels(name,address,state,phone,fax,email,website,type,rooms) VALUES
+  (:name,:address,:state,:phone,:fax,:email,:website,:type,:rooms)";//Se  hace el query que inserta en la tabla de la base de datos
   try {
 
     $db =new db();//Se llama a la base de datos
     $db =$db ->connectDB();
 
     $resultado = $db->prepare($sql);
-    $resultado ->bindParam(':nombre',$nombre);//Se hacen bindeos al resultado para guardarlo en la base de datos
-    $resultado ->bindParam(':apellidos',$apellidos);
-    $resultado ->bindParam(':telefono',$telefono);
+    $resultado ->bindParam(':name',$name);//Se hacen bindeos al resultado para guardarlo en la base de datos
+    $resultado ->bindParam(':address',$address);
+    $resultado ->bindParam(':state',$state);
+    $resultado ->bindParam(':phone',$phone);
+    $resultado ->bindParam(':fax',$fax);
     $resultado ->bindParam(':email',$email);
-    $resultado ->bindParam(':direccion',$direccion);
-    $resultado ->bindParam(':ciudad',$ciudad);
+    $resultado ->bindParam(':website',$website);
+    $resultado ->bindParam(':type',$type);
+    $resultado ->bindParam(':rooms',$rooms);
     $resultado -> execute();
-    echo json_encode("Nuevo cliente guardado");
+    echo ("New hotel saved". PHP_EOL);
 
+  $sql2 = "SELECT hotels.id from hotels order by hotels.id desc limit 1";
+
+  $resultadoU = $db->query($sql2);//Se hace query
+  if ($resultadoU->rowCount()>0) {//Metodo contador de COLUMNAS
+    $idH= $resultadoU->fetchAll(PDO::FETCH_OBJ);
+     $id=$idH[0]->id;//Se  convierte el JSON de el QUERY a una variable utilizable
+  }else{
+    echo ("No existe este id");
+  }
+  echo ("Hotel id: ".$id . PHP_EOL);//PHP EOL es salto de linea
+    $sql2=null;
+    $resultadoU=null;
+    $singleR=$rooms*0.3;//Se calcula los cuartos dependiendo de los porcentajes
+    $doubleR=$rooms*0.6;
+    $suiteR=$rooms*0.1;
+    if ($singleR-intval($singleR)<=0.5) {
+      $singleR=intval($singleR);
+    }else{
+      $singleR=intval($singleR)+1;
+    }
+
+    if ($doubleR-intval($doubleR)<=0.5) {
+      $doubleR=intval($doubleR);
+    }else{
+      $doubleR=intval($doubleR)+1;
+    }
+
+    if ($suiteR-intval($suiteR)<=0.5) {
+      $suiteR=intval($suiteR);
+    }else{
+      $suiteR=intval($suiteR)+1;
+    }
+    $totalRooms=$singleR+$doubleR+$suiteR;
+    $doubleR=$rooms-$totalRooms+$doubleR;
+    $single='single';
+    $double='double';
+    $suite='suite';
+   for ($i = 1; $i <=$singleR ; $i++) {
+    $sql2 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+    (:id,:i,:single)";
+     $resultado2= $db->prepare($sql2);
+     $resultado2 ->bindParam(':id',$id);
+     $resultado2->bindParam(':i',$i);
+     $resultado2 ->bindParam(':single',$single);
+     $resultado2 -> execute();
+     $resultado2=null;
+  }
+
+  for ($k = $i; $k <=$singleR+$doubleR ; $k++) {
+   $sql3 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+   (:id,:k,:double)";
+   $resultado2= $db->prepare($sql3);
+   $resultado2 ->bindParam(':id',$id);
+   $resultado2->bindParam(':k',$k);
+   $resultado2 ->bindParam(':double',$double);
+   $resultado2 -> execute();
+   $resultado2=null;
+ }
+
+ for ($j = $k; $j <=$singleR+$doubleR+$suiteR ; $j++) {
+  $sql4 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+  (:id,:j,:suite)";
+  $resultado2= $db->prepare($sql4);
+  $resultado2 ->bindParam(':id',$id);
+  $resultado2->bindParam(':j',$j);
+  $resultado2 ->bindParam(':suite',$suite);
+  $resultado2 -> execute();
+  $resultado2=null;
+}
     $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
     $db =null;
+    echo ("Rooms saved: 30% single rooms, 60% double rooms , 10% suites");
+
   } catch (PDOException $e) {
     echo '{"error" :{"text":'.$e->getMessage().'}';//Tiene error y lo muestra
 
