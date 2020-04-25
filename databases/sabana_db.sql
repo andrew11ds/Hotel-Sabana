@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-04-2020 a las 07:26:44
+-- Tiempo de generación: 25-04-2020 a las 03:40:42
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.4
 
@@ -22,6 +22,16 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `sabana_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `sabana_db`;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `apikey`
+--
+
+CREATE TABLE `apikey` (
+  `api_key` varchar(70) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -46,8 +56,7 @@ INSERT INTO `date` (`date_id`, `hotel_id`, `room_id`, `date_start`, `date_end`) 
 (3, 1, 5, '5 February 2020', '10 February 2020'),
 (4, 1, 7, '31 May 2020', '3 June 2020'),
 (5, 1, 8, '7 September 2020', '8 September 2020'),
-(7, 1, 8, '7 February 2020', '8 February 2020'),
-(15, 1, 7, '7 February 2020', '8 February 2020');
+(18, 1, 7, '7 February 2020', '8 February 2020');
 
 -- --------------------------------------------------------
 
@@ -33599,16 +33608,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `users`
---
-
-INSERT INTO `users` (`id`, `email`, `password`, `name`, `last_name`, `address`) VALUES
-(7, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose'),
-(8, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose'),
-(9, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose'),
-(10, 'Jose2', 'josemklegustala', 'Jose', 'mk', 'casadejose');
-
---
 -- Índices para tablas volcadas
 --
 
@@ -33644,7 +33643,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `date`
 --
 ALTER TABLE `date`
-  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `hotels`
@@ -33656,7 +33655,7 @@ ALTER TABLE `hotels`
 -- AUTO_INCREMENT de la tabla `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `reservation_id` int(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `reservation_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `users`

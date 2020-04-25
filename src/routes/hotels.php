@@ -651,3 +651,116 @@ $app ->delete('/api/hotels/deleteHotel/{idH}',function(Request $request, Respons
   }
 
 });
+
+$app ->get('/api/hotels/api/generate/{contactName},{company},{email}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $coName = $request -> getAttribute('contactName'); //Aqui obtenemos el nombre que se escriba en la URL
+  $company = $request -> getAttribute('company');
+  $email = $request -> getAttribute('email');
+
+  $str = $coName . ", " . $company . ", " . $email;
+
+  if (strlen($str)>50) {
+    $rest = substr($str,0,50);
+  }else {
+    $rest = $str;
+  }
+
+  $key = base64_encode($rest);
+
+  $sql = "INSERT into apikey (api_key) values ('$key')";//Codigo de MYSQL
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+    $resultado = $db->query($sql);//Se hace query
+
+    echo "Api key: '$key' ";
+
+    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
+
+});
+
+$app ->post('/api/user/newUser',function(Request $request, Response $response){//Creación de cliente, metodo POST
+  $email = $request->getParam('email');//Se hacen request de los parametros de las columnas
+  $password = $request->getParam('password');
+  $name = $request->getParam('name');
+  $last_name= $request->getParam('last_name');
+  $address = $request->getParam('address');
+  $sql = "INSERT INTO  users(email,password,name,last_name,address) VALUES
+  (:email,:password,:name,:last_name,:address)";//Se  hace el query que inserta en la tabla de la base de datos
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();
+
+    $resultado = $db->prepare($sql);
+    $resultado ->bindParam(':email',$email);//Se hacen bindeos al resultado para guardarlo en la base de datos
+    $resultado ->bindParam(':password',$password);
+    $resultado ->bindParam(':name',$name);
+    $resultado ->bindParam(':last_name',$last_name);
+    $resultado ->bindParam(':address',$address);
+    $resultado -> execute();
+    echo json_encode("New user saved");
+
+    $sql2 = "SELECT users.id from users order by users.id desc limit 1";
+
+    $resultadoU = $db->query($sql2);//Se hace query
+    if ($resultadoU->rowCount()>0) {//Metodo contador de COLUMNAS
+      $usr= $resultadoU->fetchAll(PDO::FETCH_OBJ);
+      echo json_encode($usr);
+    }else{
+      echo json_encode("No existe este usuario");
+    }
+    $resultadoU=null;
+    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Tiene error y lo muestra
+
+  }
+
+});
+
+$app ->put('/api/user/updateUser/{idUs}',function(Request $request, Response $response){//Creación de cliente, metodo POST
+  $id_user=$request->getAttribute('idUs');
+  $email = $request->getParam('email');//Se hacen request de los parametros de las columnas
+  $password = $request->getParam('password');
+  $name = $request->getParam('name');
+  $last_name= $request->getParam('last_name');
+  $address = $request->getParam('address');
+  $sql = "UPDATE users SET
+        email= :email,
+        password= :password,
+        name= :name,
+        last_name= :last_name,
+        address= :address
+        WHERE id=$id_user";
+
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();
+    $resultado = $db->prepare($sql);
+    $resultado ->bindParam(':email',$email);//Se hacen bindeos al resultado para guardarlo en la base de datos
+    $resultado ->bindParam(':password',$password);
+    $resultado ->bindParam(':name',$name);
+    $resultado ->bindParam(':last_name',$last_name);
+    $resultado ->bindParam(':address',$address);
+    $resultado -> execute();
+    echo json_encode("User updated(1)");
+
+    $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo("User not updated(0)");
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Tiene error y lo muestra
+
+  }
+
+});
