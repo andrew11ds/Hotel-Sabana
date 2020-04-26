@@ -1111,8 +1111,9 @@ $sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.dat
         }
       }
     }else{
-      $unexist = true;
-      echo json_encode("This state does not exist");
+      /*$unexist = true;
+      echo json_encode("This state does not exist 1");
+      */
     }
 
     $sql2 = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type from hotels join rooms on hotels.id = rooms.hotel_id where hotels.state = '$hotel_state'";
@@ -1149,9 +1150,7 @@ $sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.dat
       }
 
     }else{
-      if($unexist == false){
         echo json_encode("This state does not exist");
-      }
     }
     $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
     $db =null;
