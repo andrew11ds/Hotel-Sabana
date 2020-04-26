@@ -367,7 +367,6 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $resultado3 ->bindParam(':dstart',$dstart);
         $resultado3 ->bindParam(':dend',$dend);
         $resultado3 -> execute();
-        echo "Fecha programada".PHP_EOL;
 
         $sql2 = null;
         $sql2 = "SELECT date.date_id from date order by date.date_id desc limit 1";
@@ -436,16 +435,15 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $resultado7 ->bindParam(':dend',$dend);
         $resultado7 ->bindParam(':price',$price);
         $resultado7 -> execute();
-        echo "Reservacion hecha ". PHP_EOL;
 
         $sql2 = null;
-        $sql2 = "SELECT reservations.reservation_id from reservations order by reservations.reservation_id desc limit 1";
+        $sql2 = "SELECT reservations.reservation_id, reservations.date_id from reservations order by reservations.reservation_id desc limit 1";
 
         $resultado8 = $db->query($sql2);
         $res= $resultado8->fetchAll(PDO::FETCH_OBJ);
         $resid = $res[0]->reservation_id;
 
-        echo "Id de la reservacion: ". $resid . " Price: ".$price;
+        echo json_encode($res);
 
         $resultado3 = null;
         $resultado5 = null;
@@ -454,12 +452,112 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $resultado8 = null;
 
       }else{
-        echo "No es posible realizar la reservacion.";
+        echo "Reservation not possible";
+      }
+    }else{
+
+      $sql = null;
+      $sql = "SELECT rooms.room_id from hotels join rooms on hotels.id = rooms.hotel_id where hotels.id = '$hotelid' and rooms.room_type = '$room_type' limit 1";
+
+      $resultado = null;
+      $resultado = $db->query($sql);//Se hace query
+
+      $rid = $resultado->fetchAll(PDO::FETCH_OBJ);
+
+      $roomid = $rid[0]->room_id;
+
+      $sql2 = "INSERT INTO  date (hotel_id,room_id,date_start, date_end) VALUES
+      (:hotelid,:roomid,:dstart,:dend)";
+
+      $resultado3 = $db->prepare($sql2);
+      $resultado3 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
+      $resultado3 ->bindParam(':roomid',$roomid);
+      $resultado3 ->bindParam(':dstart',$dstart);
+      $resultado3 ->bindParam(':dend',$dend);
+      $resultado3 -> execute();
+
+      $sql2 = null;
+      $sql2 = "SELECT date.date_id from date order by date.date_id desc limit 1";
+
+      $resultado5 = $db->query($sql2);
+      $dateR= $resultado5->fetchAll(PDO::FETCH_OBJ);
+      $dateid = $dateR[0]->date_id;
+
+      $sql2 = null;
+      $sql2 = "SELECT hotels.rooms from hotels where hotels.id = '$hotelid'";
+
+      $resultado6 = $db->query($sql2);
+      $croom= $resultado6->fetchAll(PDO::FETCH_OBJ);
+      $tam = $croom[0]->rooms;
+
+      $price = 0;
+
+      if ($tam <= 50) {
+        if ($room_type == 'single') {
+          $price = 50;
+        }
+        if ($room_type == 'double') {
+          $price = 70;
+        }
+        if ($room_type == 'suite') {
+          $price = 130;
+        }
       }
 
+      if ($tam >= 51 and $tam <= 100) {
+        if ($room_type == 'single') {
+          $price = 70;
+        }
+        if ($room_type == 'double') {
+          $price = 100;
+        }
+        if ($room_type == 'suite') {
+          $price = 200;
+        }
+      }
 
-    }else{
-      echo json_encode("No hay reservas");
+      if ($tam > 100) {
+        if ($room_type == 'single') {
+          $price = 90;
+        }
+        if ($room_type == 'double') {
+          $price = 120;
+        }
+        if ($room_type == 'suite') {
+          $price = 500;
+        }
+      }
+
+      $sql2 = null;
+      $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_id,date_start,date_end,price) VALUES
+      (:hotelid,:roomid,:room_type,:userid,:cant,:dateid,:dstart,:dend,:price)";
+
+      $resultado7 = $db->prepare($sql2);
+      $resultado7 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
+      $resultado7 ->bindParam(':roomid',$roomid);
+      $resultado7 ->bindParam(':room_type',$room_type);
+      $resultado7 ->bindParam(':userid',$userid);
+      $resultado7 ->bindParam(':cant',$cant);
+      $resultado7 ->bindParam(':dateid',$dateid);
+      $resultado7 ->bindParam(':dstart',$dstart);
+      $resultado7 ->bindParam(':dend',$dend);
+      $resultado7 ->bindParam(':price',$price);
+      $resultado7 -> execute();
+
+      $sql2 = null;
+      $sql2 = "SELECT reservations.reservation_id, reservations.price  from reservations order by reservations.reservation_id desc limit 1";
+
+      $resultado8 = $db->query($sql2);
+      $res= $resultado8->fetchAll(PDO::FETCH_OBJ);
+
+      $resultado3 = null;
+      $resultado5 = null;
+      $resultado6 = null;
+      $resultado7 = null;
+      $resultado8 = null;
+
+      echo json_encode($res);
+
     }
     $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
     $db =null;
@@ -490,9 +588,9 @@ $app ->delete('/api/hotels/reservation/delete/',function(Request $request, Respo
     $resultado = $db->query($sql2);
 
     if ($resultado->rowCount()>0) {
-      echo "Reservacion eliminada.";
+      echo json_encode("Reservation removed");
     }else{
-      echo json_encode("No existe la reservacion.");
+      echo json_encode("The reservation does not exist");
     }
 
     $sql3 = "DELETE from date where date.date_id = '$date_id'";
@@ -687,25 +785,49 @@ $app ->get('/api/hotels/api/generate/{contactName},{company},{email}',function(R
   }else {
     $rest = $str;
   }
-
+  $subR = $rest;
   $key = base64_encode($rest);
 
-  $sql = "INSERT into apikey (api_key) values ('$key')";//Codigo de MYSQL
+  $sw = false;
+
   try {
 
-    $db =new db();//Se llama a la base de datos
-    $db =$db ->connectDB();//Se conecta a la base de datos
+      $db =new db();//Se llama a la base de datos
+      $db =$db ->connectDB();//Se conecta a la base de datos
 
-    $resultado = $db->query($sql);//Se hace query
+      while (!$sw) {
+          $sql = null;
+          $sql = "SELECT apikey.api_key from apikey where apikey.api_key = '$key'";
 
-    echo "Api key: '$key' ";
+          $resultado = $db->query($sql);//Se hace query
+          if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+            $sub = substr($rest,0,strlen($rest)-4);
+            $subR = $sub . random_int(0,1000);
+            $key=null;
+            $key = base64_encode($subR);
+          }else{
+            $sw = true;
+          }
+      }
 
-    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
-    $db =null;
-  } catch (PDOException $e) {
-    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+      $key = null;
+      $key = base64_encode($subR);
 
-  }
+      $sql = null;
+      $sql = "INSERT into apikey (api_key) values ('$key')";//Codigo de MYSQL
+
+      $resultado = null;
+      $resultado = $db->query($sql);//Se hace query
+
+      echo json_encode("Api key: '$key'");
+
+      $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+      $db =null;
+
+    } catch (PDOException $e) {
+      echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+    }
 
 });
 
