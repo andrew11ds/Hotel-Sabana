@@ -108,38 +108,41 @@ $app ->get('/api/hotels/type/{typeH}',function(Request $request, Response $respo
 //Obtener hotel por su tamaño
 $app ->get('/api/hotels/size/{sizeH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
   $hotel_size = $request -> getAttribute('sizeH'); //Aqui obtenemos el nombre que se escriba en la URL
-
+  $sw = false;
   if($hotel_size == 'small'){
     $sql = "SELECT * FROM hotels where hotels.rooms <= 50 AND hotels.rooms > 0";//Codigo de MYSQL
-  }
-
-  if($hotel_size == 'medium'){
-    $sql = "SELECT * FROM hotels where hotels.rooms <= 100 AND hotels.rooms > 50";//Codigo de MYSQL
-  }
-
-  if($hotel_size == 'large'){
-    $sql = "SELECT * FROM hotels where hotels.rooms > 100";//Codigo de MYSQL
-  }
-
-  try {
-
-    $db =new db();//Se llama a la base de datos
-    $db =$db ->connectDB();//Se conecta a la base de datos
-
-    $resultado = $db->query($sql);//Se hace query
-    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
-      $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
-      echo json_encode($hotels);//Se muestra el hotel
+  }else{
+    if($hotel_size == 'medium'){
+      $sql = "SELECT * FROM hotels where hotels.rooms <= 100 AND hotels.rooms > 50";//Codigo de MYSQL
     }else{
-      echo json_encode("No hotels found");
+      if($hotel_size == 'large'){
+        $sql = "SELECT * FROM hotels where hotels.rooms > 100";//Codigo de MYSQL
+      }else{
+        echo json_encode("This size does not exist");
+        $sw = true;
+      }
     }
-    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
-    $db =null;
-  } catch (PDOException $e) {
-    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
-
   }
+  if($sw == false){
+    try {
 
+      $db =new db();//Se llama a la base de datos
+      $db =$db ->connectDB();//Se conecta a la base de datos
+
+      $resultado = $db->query($sql);//Se hace query
+      if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+        $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
+        echo json_encode($hotels);//Se muestra el hotel
+      }else{
+        echo json_encode("No hotels found");
+      }
+      $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+      $db =null;
+    } catch (PDOException $e) {
+      echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+    }
+  }
 });
 
 $app ->get('/api/hotels/location/{lat},{long},{radius}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
@@ -1108,7 +1111,8 @@ $sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.dat
         }
       }
     }else{
-      echo json_encode("On this state all the rooms are available");
+      $unexist = true;
+      echo json_encode("This state does not exist");
     }
 
     $sql2 = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type from hotels join rooms on hotels.id = rooms.hotel_id where hotels.state = '$hotel_state'";
@@ -1145,7 +1149,9 @@ $sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.dat
       }
 
     }else{
-      echo json_encode("No rooms registered");
+      if($unexist == false){
+        echo json_encode("This state does not exist");
+      }
     }
     $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
     $db =null;
