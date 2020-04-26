@@ -580,27 +580,27 @@ $app ->delete('/api/hotels/reservation/delete/',function(Request $request, Respo
     $db =new db();
     $db =$db ->connectDB();
     $resultado2 = $db->query($sql);
-    $dateid= $resultado2->fetchAll(PDO::FETCH_OBJ);
-    $date_id = $dateid[0]->date_id;
-
-    $sql2 = "DELETE FROM reservations where reservations.hotel_id = $hotelid and reservations.room_id = $room_id and reservations.date_start = '$date_start'";//Codigo de MYSQL
-
-    $resultado = $db->query($sql2);
-
-    if ($resultado->rowCount()>0) {
+    if ($resultado2->rowCount()>0) {
       echo json_encode("Reservation removed");
+      $dateid= $resultado2->fetchAll(PDO::FETCH_OBJ);
+      $date_id = $dateid[0]->date_id;
+      $sql2 = "DELETE FROM reservations where reservations.hotel_id = $hotelid and reservations.room_id = $room_id and reservations.date_start = '$date_start'";//Codigo de MYSQL
+      $resultado = $db->query($sql2);
+      $sql3 = "DELETE from date where date.date_id = '$date_id'";
+      $resultado =null;
+      $resultado = $db->query($sql3);
+
+      $resultado =null;
+      $resultado2 =null;
+      $db =null;
     }else{
       echo json_encode("The reservation does not exist");
     }
 
-    $sql3 = "DELETE from date where date.date_id = '$date_id'";
 
-    $resultado =null;
-    $resultado = $db->query($sql3);
 
-    $resultado =null;
-    $resultado2 =null;
-    $db =null;
+
+
 
   } catch (PDOException $e) {
     echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
@@ -625,95 +625,104 @@ $app ->put('/api/hotels/updateHotel/{idH}/key/{apikey}',function(Request $reques
         rooms=:rooms
         WHERE id=$id_hotel";
   $sql2="SELECT * FROM apikey where '$api_key' = apikey.api_key";
+  $sql3="SELECT * FROM hotels where '$id_hotel'=hotels.id";
   try {
 
     $db =new db();//Se llama a la base de datos
     $db =$db ->connectDB();
     $resultado = $db->query($sql2);//Se hace query
     if ($resultado->rowCount()>0){
+
       $resultado =null;
-      $resultado = $db->prepare($sql);
-      $resultado ->bindParam(':phone',$phone);
-      $resultado ->bindParam(':email',$email);//Se hacen bindeos al resultado para guardarlo en la base de datos
-      $resultado ->bindParam(':website',$website);
-      $resultado ->bindParam(':type',$type);
-      $resultado ->bindParam(':rooms',$rooms);
-      $resultado -> execute();
-      echo json_encode("Hotel updated(1)" .PHP_EOL);
-      $resultado =null;
-      $sql2 = "DELETE FROM rooms WHERE rooms.hotel_id='$id_hotel'";
-      $resultado = $db->query($sql2);
-      $resultado =null;
-      $sql2=null;
-      $sql2="DELETE FROM reservations WHERE reservations.hotel_id='$id_hotel'";
-      $resultado = $db->query($sql2);
-      $resultado =null;
-      $sql2=null;
-      $sql2="DELETE FROM date WHERE  date.hotel_id='$id_hotel'";
-      $resultado = $db->query($sql2);//Se hace query
-      $id=$id_hotel;
-      $sql2=null;
-      $resultadoU=null;
-      $singleR=$rooms*0.3;//Se calcula los cuartos dependiendo de los porcentajes
-      $doubleR=$rooms*0.6;
-      $suiteR=$rooms*0.1;
-      if ($singleR-intval($singleR)<=0.5) {
-        $singleR=intval($singleR);
-      }else{
-        $singleR=intval($singleR)+1;
+      $resultado = $db->query($sql3);
+      if ($resultado->rowCount()>0) {
+        $resultado=null;
+        $resultado = $db->prepare($sql);
+        $resultado ->bindParam(':phone',$phone);
+        $resultado ->bindParam(':email',$email);//Se hacen bindeos al resultado para guardarlo en la base de datos
+        $resultado ->bindParam(':website',$website);
+        $resultado ->bindParam(':type',$type);
+        $resultado ->bindParam(':rooms',$rooms);
+        $resultado -> execute();
+        echo json_encode("Hotel updated(1)" .PHP_EOL);
+        $resultado =null;
+        $sql2 = "DELETE FROM rooms WHERE rooms.hotel_id='$id_hotel'";
+        $resultado = $db->query($sql2);
+        $resultado =null;
+        $sql2=null;
+        $sql2="DELETE FROM reservations WHERE reservations.hotel_id='$id_hotel'";
+        $resultado = $db->query($sql2);
+        $resultado =null;
+        $sql2=null;
+        $sql2="DELETE FROM date WHERE  date.hotel_id='$id_hotel'";
+        $resultado = $db->query($sql2);//Se hace query
+        $id=$id_hotel;
+        $sql2=null;
+        $resultadoU=null;
+        $singleR=$rooms*0.3;//Se calcula los cuartos dependiendo de los porcentajes
+        $doubleR=$rooms*0.6;
+        $suiteR=$rooms*0.1;
+        if ($singleR-intval($singleR)<=0.5) {
+          $singleR=intval($singleR);
+        }else{
+          $singleR=intval($singleR)+1;
+        }
+
+        if ($doubleR-intval($doubleR)<=0.5) {
+          $doubleR=intval($doubleR);
+        }else{
+          $doubleR=intval($doubleR)+1;
+        }
+
+        if ($suiteR-intval($suiteR)<=0.5) {
+          $suiteR=intval($suiteR);
+        }else{
+          $suiteR=intval($suiteR)+1;
+        }
+        $totalRooms=$singleR+$doubleR+$suiteR;
+        $doubleR=$rooms-$totalRooms+$doubleR;
+        $single='single';
+        $double='double';
+        $suite='suite';
+       for ($i = 1; $i <=$singleR ; $i++) {
+        $sql2 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+        (:id,:i,:single)";
+         $resultado2= $db->prepare($sql2);
+         $resultado2 ->bindParam(':id',$id);
+         $resultado2->bindParam(':i',$i);
+         $resultado2 ->bindParam(':single',$single);
+         $resultado2 -> execute();
+         $resultado2=null;
       }
 
-      if ($doubleR-intval($doubleR)<=0.5) {
-        $doubleR=intval($doubleR);
-      }else{
-        $doubleR=intval($doubleR)+1;
-      }
-
-      if ($suiteR-intval($suiteR)<=0.5) {
-        $suiteR=intval($suiteR);
-      }else{
-        $suiteR=intval($suiteR)+1;
-      }
-      $totalRooms=$singleR+$doubleR+$suiteR;
-      $doubleR=$rooms-$totalRooms+$doubleR;
-      $single='single';
-      $double='double';
-      $suite='suite';
-     for ($i = 1; $i <=$singleR ; $i++) {
-      $sql2 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
-      (:id,:i,:single)";
-       $resultado2= $db->prepare($sql2);
+      for ($k = $i; $k <=$singleR+$doubleR ; $k++) {
+       $sql3 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+       (:id,:k,:double)";
+       $resultado2= $db->prepare($sql3);
        $resultado2 ->bindParam(':id',$id);
-       $resultado2->bindParam(':i',$i);
-       $resultado2 ->bindParam(':single',$single);
+       $resultado2->bindParam(':k',$k);
+       $resultado2 ->bindParam(':double',$double);
        $resultado2 -> execute();
        $resultado2=null;
+     }
+
+     for ($j = $k; $j <=$singleR+$doubleR+$suiteR ; $j++) {
+      $sql4 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
+      (:id,:j,:suite)";
+      $resultado2= $db->prepare($sql4);
+      $resultado2 ->bindParam(':id',$id);
+      $resultado2->bindParam(':j',$j);
+      $resultado2 ->bindParam(':suite',$suite);
+      $resultado2 -> execute();
+      $resultado2=null;
     }
+        $resultado =null;
+        $db =null;
+        echo ("Rooms updated: 30% single rooms, 60% double rooms , 10% suites");
+      }else{
+        echo("Hotel does not exist");
+      }
 
-    for ($k = $i; $k <=$singleR+$doubleR ; $k++) {
-     $sql3 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
-     (:id,:k,:double)";
-     $resultado2= $db->prepare($sql3);
-     $resultado2 ->bindParam(':id',$id);
-     $resultado2->bindParam(':k',$k);
-     $resultado2 ->bindParam(':double',$double);
-     $resultado2 -> execute();
-     $resultado2=null;
-   }
-
-   for ($j = $k; $j <=$singleR+$doubleR+$suiteR ; $j++) {
-    $sql4 = "INSERT INTO rooms (hotel_id,room_id,room_type) VALUES
-    (:id,:j,:suite)";
-    $resultado2= $db->prepare($sql4);
-    $resultado2 ->bindParam(':id',$id);
-    $resultado2->bindParam(':j',$j);
-    $resultado2 ->bindParam(':suite',$suite);
-    $resultado2 -> execute();
-    $resultado2=null;
-  }
-      $resultado =null;
-      $db =null;
-      echo ("Rooms updated: 30% single rooms, 60% double rooms , 10% suites");
     }else{
       echo 'invalid api key';
     }
@@ -879,6 +888,7 @@ $app ->put('/api/user/updateUser/{idUs}',function(Request $request, Response $re
   $name = $request->getParam('name');
   $last_name= $request->getParam('last_name');
   $address = $request->getParam('address');
+  $sql2= "SELECT * FROM  users where users.id = '$id_user'";
   $sql = "UPDATE users SET
         email= :email,
         password= :password,
@@ -891,14 +901,21 @@ $app ->put('/api/user/updateUser/{idUs}',function(Request $request, Response $re
 
     $db =new db();//Se llama a la base de datos
     $db =$db ->connectDB();
-    $resultado = $db->prepare($sql);
-    $resultado ->bindParam(':email',$email);//Se hacen bindeos al resultado para guardarlo en la base de datos
-    $resultado ->bindParam(':password',$password);
-    $resultado ->bindParam(':name',$name);
-    $resultado ->bindParam(':last_name',$last_name);
-    $resultado ->bindParam(':address',$address);
-    $resultado -> execute();
-    echo json_encode("User updated(1)");
+    $resultado = $db->query($sql2);
+    if ($resultado->rowCount()>0) {
+      $resultado=null;
+      $resultado = $db->prepare($sql);
+      $resultado ->bindParam(':email',$email);//Se hacen bindeos al resultado para guardarlo en la base de datos
+      $resultado ->bindParam(':password',$password);
+      $resultado ->bindParam(':name',$name);
+      $resultado ->bindParam(':last_name',$last_name);
+      $resultado ->bindParam(':address',$address);
+      $resultado -> execute();
+      echo json_encode("User updated(1)");
+    }else{
+        echo("User not updated(0), user does not exist");
+    }
+
 
     $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
     $db =null;
