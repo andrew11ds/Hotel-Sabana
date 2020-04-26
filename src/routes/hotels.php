@@ -909,3 +909,105 @@ $app ->put('/api/user/updateUser/{idUs}',function(Request $request, Response $re
   }
 
 });
+
+$app ->get('/api/hotels/availability/{startdateH},{finaldateH},{stateH}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+  $start_d = $request -> getAttribute('startdateH'); //Aqui obtenemos el nombre que se escriba en la URL
+  $final_d = $request -> getAttribute('finaldateH');
+  $hotel_state = $request -> getAttribute('stateH');
+
+  $start_date = strtotime($start_d);
+  $final_date = strtotime($final_d);
+
+
+$sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.date_start, date.date_end FROM hotels join date on hotels.id = date.hotel_id join rooms on rooms.room_id = date.room_id and rooms.hotel_id = date.hotel_id where hotels.state = '$hotel_state'";//Codigo de MYSQL
+  try {
+
+    $db =new db();//Se llama a la base de datos
+    $db =$db ->connectDB();//Se conecta a la base de datos
+
+    $resultado = $db->query($sql);//Se hace query
+
+    if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+      $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
+      $cont = 0;
+      for ($i=0; $i < count($hotels) ; $i++) {
+        $s = $hotels[$i]->date_start;
+        $e = $hotels[$i]->date_end;
+        $cs = strtotime($s);
+        $ce = strtotime($e);
+        $sw = true;
+
+        if((($start_date<$cs and $start_date<$ce) and ($final_date<=$cs and $final_date<$ce)) or (($start_date>$cs and $start_date>=$ce) and ($final_date>$cs and $final_date>$ce))){
+
+        }else{
+          $rooms_disable[$cont] = $hotels[$i]->room_id;
+          $dates_disable[$cont] = $hotels[$i]->date_start;
+          $cont++;
+        }
+      }
+
+      for ($i=0; $i < count($hotels) ; $i++) {
+        $sw = true;
+        if (empty($rooms_disable) == false) {
+          for ($j=0; $j < count($rooms_disable) ; $j++) {
+            $temp = $hotels[$i]->room_id;
+            $temp2 = $hotels[$i]->date_start;
+            if(($temp == $rooms_disable[$j]) && ($temp2 == $dates_disable[$j])){
+              $sw = false;
+              $ahid[$i] = $hotels[$i]->id;
+              $ahstate[$i] = $hotels[$i]->state;
+              $arroom_id[$i] = $hotels[$i]->room_id;
+              $arroom_type[$i] = $hotels[$i]->room_type;
+              $ocupados[$i] = $ahid[$i]."-".$arroom_id[$i];
+            }
+          }
+        }
+      }
+    }else{
+      echo json_encode("On this state all the rooms are available");
+    }
+
+    $sql2 = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type from hotels join rooms on hotels.id = rooms.hotel_id where hotels.state = '$hotel_state'";
+
+    $resultado = $db->query($sql2);//Se hace query
+    if($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+      $hotels2 = $resultado->fetchAll(PDO::FETCH_OBJ);
+
+      for ($i=0; $i < count($hotels2); $i++) {
+        $ahid2[$i] = $hotels2[$i]->id;
+        $ahstate2[$i] = $hotels2[$i]->state;
+        $arroom_id2[$i] = $hotels2[$i]->room_id;
+        $arroom_type2[$i] = $hotels2[$i]->room_type;
+        $disponible2[$i] = $ahid2[$i]."-".$arroom_id2[$i];
+      }
+
+      if (empty($ocupados) == false) {
+        $disponible2 = array_values(array_diff($disponible2,$ocupados));
+
+        for ($i=0; $i < count($hotels2); $i++) {
+          for ($j=0; $j < count($disponible2); $j++) {
+            $separada = explode("-", $disponible2[$j]);
+            //var_dump($separada);
+            if($separada[0] == $ahid2[$i] && $separada[1] == $arroom_id2[$i]){
+              echo json_encode($hotels2[$i]);
+              break;
+            }
+          }
+        }
+      }else{
+        for ($i=0; $i < count($hotels2); $i++) {
+          echo json_encode($hotels2[$i]);
+        }
+      }
+
+    }else{
+      echo json_encode("No rooms registered");
+    }
+    $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+    $db =null;
+  } catch (PDOException $e) {
+    echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
+
+  }
+
+});
