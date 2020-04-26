@@ -336,7 +336,7 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $cdstart = strtotime($dstart);
         $cdend = strtotime($dend);
 
-        if((($cdstart<$cs and $cdstart<$ce) and ($cdend<$cs and $cdend<$ce)) or (($cdstart>$cs and $cdstart>$ce) and ($cdend>$cs and $cdend>$ce))){
+        if((($cdstart<$cs and $cdstart<$ce) and ($cdend<=$cs and $cdend<$ce)) or (($cdstart>$cs and $cdstart>=$ce) and ($cdend>$cs and $cdend>$ce))){
         }else{
           $roomR[$j] = $hotels[$i]->room_id;
           $j = $j + 1;
