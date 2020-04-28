@@ -227,7 +227,7 @@ $app ->post('/api/hotels/newHotel/key/{apikey}',function(Request $request, Respo
       $resultado ->bindParam(':type',$type);
       $resultado ->bindParam(':rooms',$rooms);
       $resultado -> execute();
-      echo ("New hotel saved". PHP_EOL);
+
 
     $sql2 = "SELECT hotels.id from hotels order by hotels.id desc limit 1";
 
@@ -238,7 +238,7 @@ $app ->post('/api/hotels/newHotel/key/{apikey}',function(Request $request, Respo
     }else{
       echo ("Id does not exist");
     }
-    echo ("Hotel id: ".$id . PHP_EOL);//PHP EOL es salto de linea
+    echo json_encode("New Hotel id: ".$id);
       $sql2=null;
       $resultadoU=null;
       $singleR=$rooms*0.3;//Se calcula los cuartos dependiendo de los porcentajes
@@ -300,9 +300,8 @@ $app ->post('/api/hotels/newHotel/key/{apikey}',function(Request $request, Respo
   }
       $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
       $db =null;
-      echo ("Rooms saved: 30% single rooms, 60% double rooms , 10% suites");
     }else{
-      echo ("Invalid Api key");
+      echo json_encode ("Invalid Api key");
     }
 
 
@@ -848,17 +847,16 @@ $app ->put('/api/hotels/updateHotel/{idH}/key/{apikey}',function(Request $reques
     }
         $resultado =null;
         $db =null;
-        echo ("Rooms updated: 30% single rooms, 60% double rooms , 10% suites");
       }else{
-        echo("Hotel does not exist");
+        echo json_encode("Hotel does not exist");
       }
 
     }else{
-      echo 'invalid api key';
+      echo json_encode ("invalid api key");
     }
 
   } catch (PDOException $e) {
-    echo("User not updated(0)");
+    echo json_encode ("User not updated(0)");
     echo '{"error" :{"text":'.$e->getMessage().'}';//Tiene error y lo muestra
 
   }
@@ -883,9 +881,9 @@ $app ->delete('/api/hotels/deleteHotel/{idH}/key/{apikey}',function(Request $req
       $sql5 = "DELETE FROM date WHERE date.hotel_id = '$id_hotel'";
       $resultado = $db->query($sql2);
       if ($resultado->rowCount()>0) {
-        echo "Hotel has been erased successfully.";
+        echo json_encode ("Hotel has been erased successfully.");
       }else{
-        echo "Hotel does not exist";
+        echo json_encode ("Hotel does not exist");
       }
       $resultado=null;
       $resultado = $db->query($sql3);
@@ -1041,16 +1039,18 @@ $app ->put('/api/user/updateUser/{idUs}',function(Request $request, Response $re
       $resultado ->bindParam(':last_name',$last_name);
       $resultado ->bindParam(':address',$address);
       $resultado -> execute();
-      echo json_encode("User updated(1)");
+      echo json_encode("1");
     }else{
-        echo("User not updated(0), user does not exist");
+        echo ("user does not exist" .PHP_EOL);
+        echo json_encode("0");
+
     }
 
 
     $resultado =null;//Db y resultado deben quedar en null cada vez que se hace un query
     $db =null;
   } catch (PDOException $e) {
-    echo("User not updated(0)");
+    echo json_encode("0" .PHP_EOL);
     echo '{"error" :{"text":'.$e->getMessage().'}';//Tiene error y lo muestra
 
   }
