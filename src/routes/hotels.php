@@ -1128,21 +1128,20 @@ $sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.dat
 
       if (empty($ocupados) == false) {
         $disponible2 = array_values(array_diff($disponible2,$ocupados));
-
+        $cont = 0;
         for ($i=0; $i < count($hotels2); $i++) {
           for ($j=0; $j < count($disponible2); $j++) {
             $separada = explode("-", $disponible2[$j]);
-            //var_dump($separada);
             if($separada[0] == $ahid2[$i] && $separada[1] == $arroom_id2[$i]){
-              echo json_encode($hotels2[$i]);
+              $disponible_hotels[$cont] = $hotels2[$i];
+              $cont++;
               break;
             }
           }
         }
+          echo json_encode($disponible_hotels);
       }else{
-        for ($i=0; $i < count($hotels2); $i++) {
-          echo json_encode($hotels2[$i]);
-        }
+          echo json_encode($hotels2);
       }
 
     }else{
