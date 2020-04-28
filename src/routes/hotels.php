@@ -164,11 +164,12 @@ $app ->get('/api/hotels/location/{lat},{long},{radius}',function(Request $reques
 
   $address = json_decode($curlData);
 
-  if (!empty($address)) {
-    $Hname = $address -> results[0] -> name;
 
-    $sql = "SELECT * FROM hotels where '$Hname' = hotels.name";//Codigo de MYSQL
-    try {
+  try {
+      if (!empty($address) and ($address -> status != 'ZERO_RESULTS') and ($address -> status != 'INVALID_REQUEST')) {
+        $Hname = $address -> results[0] -> name;
+
+        $sql = "SELECT * FROM hotels where '$Hname' = hotels.name";//Codigo de MYSQL
 
       $db =new db();//Se llama a la base de datos
       $db =$db ->connectDB();//Se conecta a la base de datos
@@ -182,10 +183,11 @@ $app ->get('/api/hotels/location/{lat},{long},{radius}',function(Request $reques
       }
       $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
       $db =null;
-    } catch (PDOException $e) {
-      echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
-
+    }else{
+      echo json_encode("No hotels found");
     }
+  } catch (PDOException $e) {
+      echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
   }
 
 });
@@ -568,8 +570,8 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
 
             echo json_encode($res);
           }else{
-            echo "Reservation not possible" . PHP_EOL;
-            echo "No rooms available";
+            echo json_encode("Reservation not possible") . PHP_EOL;
+            echo json_encode("No rooms available");
           }
 
         }
