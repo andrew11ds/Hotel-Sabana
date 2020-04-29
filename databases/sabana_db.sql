@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-04-2020 a las 04:30:55
+-- Tiempo de generación: 30-04-2020 a las 00:09:53
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.4
 
@@ -31,20 +31,6 @@ USE `sabana_db`;
 
 CREATE TABLE `apikey` (
   `api_key` varchar(70) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `date`
---
-
-CREATE TABLE `date` (
-  `date_id` int(10) NOT NULL,
-  `hotel_id` int(10) NOT NULL,
-  `room_id` int(5) NOT NULL,
-  `date_start` varchar(50) NOT NULL,
-  `date_end` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -388,7 +374,6 @@ CREATE TABLE `reservations` (
   `room_type` varchar(10) NOT NULL,
   `user_id` int(20) NOT NULL,
   `lodgers` int(5) NOT NULL,
-  `date_id` int(10) NOT NULL,
   `date_start` varchar(50) NOT NULL,
   `date_end` varchar(50) NOT NULL,
   `price` int(15) NOT NULL
@@ -33601,12 +33586,6 @@ CREATE TABLE `users` (
 --
 
 --
--- Indices de la tabla `date`
---
-ALTER TABLE `date`
-  ADD PRIMARY KEY (`date_id`);
-
---
 -- Indices de la tabla `hotels`
 --
 ALTER TABLE `hotels`
@@ -33629,12 +33608,6 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT de la tabla `date`
---
-ALTER TABLE `date`
-  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
-
---
 -- AUTO_INCREMENT de la tabla `hotels`
 --
 ALTER TABLE `hotels`
@@ -33644,7 +33617,7 @@ ALTER TABLE `hotels`
 -- AUTO_INCREMENT de la tabla `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `reservation_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `reservation_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `users`

@@ -332,7 +332,7 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
   $dstart = $request -> getParam('start_date');
   $dend = $request -> getParam('end_date');
 
-  $sql = "SELECT hotels.id, rooms.room_id, date.date_start, date.date_end FROM hotels join rooms on hotels.id = rooms.hotel_id join date on date.room_id = rooms.room_id where hotels.id = '$hotelid' and rooms.room_type = '$room_type'";//Codigo de MYSQL
+  $sql = "SELECT hotels.id, rooms.room_id, reservations.date_start, reservations.date_end FROM hotels join rooms on hotels.id = rooms.hotel_id join reservations on reservations.room_id = rooms.room_id where hotels.id = '$hotelid' and rooms.room_type = '$room_type'";//Codigo de MYSQL
   try {
 
     $db =new db();//Se llama a la base de datos
@@ -374,22 +374,6 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
       }
 
       if($roomid > 0){
-        $sql2 = "INSERT INTO  date (hotel_id,room_id,date_start, date_end) VALUES
-        (:hotelid,:roomid,:dstart,:dend)";
-
-        $resultado3 = $db->prepare($sql2);
-        $resultado3 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
-        $resultado3 ->bindParam(':roomid',$roomid);
-        $resultado3 ->bindParam(':dstart',$dstart);
-        $resultado3 ->bindParam(':dend',$dend);
-        $resultado3 -> execute();
-
-        $sql2 = null;
-        $sql2 = "SELECT date.date_id from date order by date.date_id desc limit 1";
-
-        $resultado5 = $db->query($sql2);
-        $dateR= $resultado5->fetchAll(PDO::FETCH_OBJ);
-        $dateid = $dateR[0]->date_id;
 
         $sql2 = null;
         $sql2 = "SELECT hotels.rooms from hotels where hotels.id = '$hotelid'";
@@ -437,8 +421,8 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         }
 
         $sql2 = null;
-        $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_id,date_start,date_end,price) VALUES
-        (:hotelid,:roomid,:room_type,:userid,:cant,:dateid,:dstart,:dend,:price)";
+        $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_start,date_end,price) VALUES
+        (:hotelid,:roomid,:room_type,:userid,:cant,:dstart,:dend,:price)";
 
         $resultado7 = $db->prepare($sql2);
         $resultado7 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
@@ -446,7 +430,6 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $resultado7 ->bindParam(':room_type',$room_type);
         $resultado7 ->bindParam(':userid',$userid);
         $resultado7 ->bindParam(':cant',$cant);
-        $resultado7 ->bindParam(':dateid',$dateid);
         $resultado7 ->bindParam(':dstart',$dstart);
         $resultado7 ->bindParam(':dend',$dend);
         $resultado7 ->bindParam(':price',$price);
@@ -488,23 +471,6 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
           }
 
           if ($roomid > 0) {
-            $sql2 = "INSERT INTO  date (hotel_id,room_id,date_start, date_end) VALUES
-            (:hotelid,:roomid,:dstart,:dend)";
-
-            $resultado3 = $db->prepare($sql2);
-            $resultado3 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
-            $resultado3 ->bindParam(':roomid',$roomid);
-            $resultado3 ->bindParam(':dstart',$dstart);
-            $resultado3 ->bindParam(':dend',$dend);
-            $resultado3 -> execute();
-
-            $sql2 = null;
-            $sql2 = "SELECT date.date_id from date order by date.date_id desc limit 1";
-
-            $resultado5 = $db->query($sql2);
-            $dateR= $resultado5->fetchAll(PDO::FETCH_OBJ);
-            $dateid = $dateR[0]->date_id;
-
             $sql2 = null;
             $sql2 = "SELECT hotels.rooms from hotels where hotels.id = '$hotelid'";
 
@@ -551,8 +517,8 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
             }
 
             $sql2 = null;
-            $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_id,date_start,date_end,price) VALUES
-            (:hotelid,:roomid,:room_type,:userid,:cant,:dateid,:dstart,:dend,:price)";
+            $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_start,date_end,price) VALUES
+            (:hotelid,:roomid,:room_type,:userid,:cant,:dstart,:dend,:price)";
 
             $resultado7 = $db->prepare($sql2);
             $resultado7 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
@@ -560,7 +526,6 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
             $resultado7 ->bindParam(':room_type',$room_type);
             $resultado7 ->bindParam(':userid',$userid);
             $resultado7 ->bindParam(':cant',$cant);
-            $resultado7 ->bindParam(':dateid',$dateid);
             $resultado7 ->bindParam(':dstart',$dstart);
             $resultado7 ->bindParam(':dend',$dend);
             $resultado7 ->bindParam(':price',$price);
@@ -600,23 +565,6 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $rid = $resultado->fetchAll(PDO::FETCH_OBJ);
 
         $roomid = $rid[0]->room_id;
-
-        $sql2 = "INSERT INTO  date (hotel_id,room_id,date_start, date_end) VALUES
-        (:hotelid,:roomid,:dstart,:dend)";
-
-        $resultado3 = $db->prepare($sql2);
-        $resultado3 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
-        $resultado3 ->bindParam(':roomid',$roomid);
-        $resultado3 ->bindParam(':dstart',$dstart);
-        $resultado3 ->bindParam(':dend',$dend);
-        $resultado3 -> execute();
-
-        $sql2 = null;
-        $sql2 = "SELECT date.date_id from date order by date.date_id desc limit 1";
-
-        $resultado5 = $db->query($sql2);
-        $dateR= $resultado5->fetchAll(PDO::FETCH_OBJ);
-        $dateid = $dateR[0]->date_id;
 
         $sql2 = null;
         $sql2 = "SELECT hotels.rooms from hotels where hotels.id = '$hotelid'";
@@ -664,8 +612,8 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         }
 
         $sql2 = null;
-        $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_id,date_start,date_end,price) VALUES
-        (:hotelid,:roomid,:room_type,:userid,:cant,:dateid,:dstart,:dend,:price)";
+        $sql2 = "INSERT INTO  reservations (hotel_id,room_id,room_type,user_id,lodgers,date_start,date_end,price) VALUES
+        (:hotelid,:roomid,:room_type,:userid,:cant,:dstart,:dend,:price)";
 
         $resultado7 = $db->prepare($sql2);
         $resultado7 ->bindParam(':hotelid',$hotelid);//Se hacen bindeos al resultado para guardarlo en la base de datos
@@ -673,7 +621,6 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
         $resultado7 ->bindParam(':room_type',$room_type);
         $resultado7 ->bindParam(':userid',$userid);
         $resultado7 ->bindParam(':cant',$cant);
-        $resultado7 ->bindParam(':dateid',$dateid);
         $resultado7 ->bindParam(':dstart',$dstart);
         $resultado7 ->bindParam(':dend',$dend);
         $resultado7 ->bindParam(':price',$price);
@@ -720,7 +667,7 @@ $app ->delete('/api/hotels/reservation/delete/{hotel_id},{room_id},{date_start}'
   $room_id = $request -> getAttribute('room_id');
   $date_start = $request -> getAttribute('date_start');
 
-  $sql = "SELECT reservations.date_id FROM reservations where reservations.hotel_id = '$hotelid' and reservations.room_id = '$room_id' and reservations.date_start = '$date_start'";//Codigo de MYSQL
+  $sql = "SELECT reservations.reservation_id FROM reservations where reservations.hotel_id = '$hotelid' and reservations.room_id = '$room_id' and reservations.date_start = '$date_start'";//Codigo de MYSQL
   try {
 
     $db =new db();
@@ -728,13 +675,9 @@ $app ->delete('/api/hotels/reservation/delete/{hotel_id},{room_id},{date_start}'
     $resultado2 = $db->query($sql);
     if ($resultado2->rowCount()>0) {
       echo json_encode("Reservation removed");
-      $dateid= $resultado2->fetchAll(PDO::FETCH_OBJ);
-      $date_id = $dateid[0]->date_id;
+
       $sql2 = "DELETE FROM reservations where reservations.hotel_id = $hotelid and reservations.room_id = $room_id and reservations.date_start = '$date_start'";//Codigo de MYSQL
       $resultado = $db->query($sql2);
-      $sql3 = "DELETE from date where date.date_id = '$date_id'";
-      $resultado =null;
-      $resultado = $db->query($sql3);
 
       $resultado =null;
       $resultado2 =null;
@@ -1078,7 +1021,7 @@ $app ->get('/api/hotels/availability/{startdateH},{finaldateH},{stateH}',functio
   $final_date = strtotime($final_d);
 
 
-$sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.date_start, date.date_end FROM hotels join date on hotels.id = date.hotel_id join rooms on rooms.room_id = date.room_id and rooms.hotel_id = date.hotel_id where hotels.state = '$hotel_state'";//Codigo de MYSQL
+$sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, reservations.date_start, reservations.date_end FROM hotels join reservations on hotels.id = reservations.hotel_id join rooms on rooms.room_id = reservations.room_id and rooms.hotel_id = reservations.hotel_id where hotels.state = '$hotel_state'";//Codigo de MYSQL
   try {
 
     $db =new db();//Se llama a la base de datos
