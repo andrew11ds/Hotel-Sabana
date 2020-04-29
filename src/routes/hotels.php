@@ -704,11 +704,11 @@ $app ->post('/api/hotels/reserve',function(Request $request, Response $response)
 
 });
 
-$app ->delete('/api/hotels/reservation/delete/',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
+$app ->delete('/api/hotels/reservation/delete/{hotel_id},{room_id},{date_start}',function(Request $request, Response $response){//Metodo get, el link debe ser puesto en postman con GET
 
-  $hotelid = $request -> getParam('hotel_id');
-  $room_id = $request -> getParam('room_id');
-  $date_start = $request -> getParam('date_start');
+  $hotelid = $request -> getAttribute('hotel_id');
+  $room_id = $request -> getAttribute('room_id');
+  $date_start = $request -> getAttribute('date_start');
 
   $sql = "SELECT reservations.date_id FROM reservations where reservations.hotel_id = '$hotelid' and reservations.room_id = '$room_id' and reservations.date_start = '$date_start'";//Codigo de MYSQL
   try {
@@ -1155,5 +1155,48 @@ $sql = "SELECT hotels.id, hotels.state, rooms.room_id, rooms.room_type, date.dat
     echo '{"error" :{"text":'.$e->getMessage().'}';//Muestra error si hubo
 
   }
+
+});
+
+$app ->get('/api/help',function(Request $request, Response $response){
+  echo '<HTML>
+  <HEAD>
+  <TITLE>Help</TITLE>
+  </HEAD>
+  <BODY>
+  <P>Welcome to Hotel Sabana API in this URL you can find  all the commands needed in order to use all the functions available.</P>
+      <P>NOTES:</P>
+      <P>*The information in parenthesis is the variable or variables that the user is going to input,
+      take in account that the USER  MUST NOT include the parenthesis when making those request, these are just
+      for showing a clearer use of these functions. </P>
+      <P>*POST AND PUT WILL RECIEVE JSON THROUGH A RAW BODY, WE RECOMMEND POSTMAN IN ORDER TO MAKE THESE REQUEST.</P>
+      <P>*THERE ARE SOME FUNCTIONS THAT REQUIRE API KEYS, IN ORDER TO GENERATE AN API KEY YOU MUST GET IT THROUGH THE GET A NEW API KEY FUNCTION.
+      <P>FUNCTIONS:</P>
+      <P>GET METHOD FUNCTIONS:</P>
+      <P>Get hotel by Name: http://localhost/hotelSabana/public/api/hotels/name/(INSERT_NAME)</P>
+      <P>Get hotel by state: http://localhost/hotelSabana/public/api/hotels/state/(INSERT_STATE)</P>
+      <P>Get hotel by size: http://localhost/hotelSabana/public/api/hotels/size/(INSERT_SIZE)</P>
+      <P>Get hotel by type: http://localhost/hotelSabana/public/api/hotels/type/(INSERT_HOTEL_TYPE)</P>
+      <P>Get hotel by latitude,longitude,radius: http://localhost/hotelSabana/public/api/hotels/location/(INSERT_LATITUDE,INSERT_LONGITUDE,INSERT_RADIUS)</P>
+      <P>Get hotel availability by state: http://localhost/hotelSabana/public/api/hotels/availability/(INSERT_START_DATE,INSERT_END_DATE,INSERT_STATE)</P>
+      <P>Get a new API KEY:http://localhost/hotelSabana/public/api/hotels/api/generate/(INSERT_NAME,INSERT_COMPANY,INSERT_EMAIL)</P>
+
+
+      <P>POST METHOD FUNCTIONS:</P>
+      <P>Create new user: http://localhost/hotelSabana/public/api/user/newUser &ensp; JSON STRUCTURE: {"email":"(INSERT_EMAIL)","password":"(INSERT_PASSWORD)","name":"(INSERT_NAME)","last_name":"(INSERT_LAST_NAME)","address":"INSERT_ADDRESS"}</P>
+      <P>Create room reservation: http://localhost/hotelSabana/public/api/hotels/reserve &ensp; JSON STRUCTURE: {"hotel_id":"(INSERT_HOTEL_ID)","user_id":"(INSERT_USER_ID)","cant":"(INSERT_NUMBER_OF_LODGERS)","room_type":"(INSERT_ROOM_TYPE)","start_date":"(INSERT_START_DATE)","end_date":"(INSERT_END_DATE)"}</P>
+      <P>Create new hotel: http://localhost/hotelSabana/public/api/hotels/newHotel/key/(INSERT_API_KEY) &ensp; JSON STRUCTURE: {"name":"(INSERT_HOTEL_NAME)","address":"(INSERT_ADDRESS)","state":"(INSERT_STATE)","phone":(INSERT_PHONE_NUMBER),"fax":(INSERT_FAX_NUMBER),"email":"(INSERT_EMAIL)","website":"(INSERT_WEBSITE)","type":"INSERT_HOTEL_TYPE", "rooms":INSERT_ROOMS_NUMBER}</P>
+
+      <P>PUT METHOD FUNCTIONS: </P>
+      <P>Update user: http://localhost/hotelSabana/public/api/user/updateUser/(INSERT_USER_ID) &ensp; JSON STRUCTURE: {"email":"(INSERT_EMAIL)","password":"(INSERT_PASSWORD)","name":"(INSERT_NAME)","last_name":"(INSERT_LAST_NAME)","address":"INSERT_ADDRESS"}</P>
+      <P>Update hotel: http://localhost/hotelSabana/public/api/hotels/updateHotel/(INSERT_HOTEL_ID)/key/(INSERT_API_KEY) &ensp; JSON STRUCTURE: {"type":"(HOTEL_TYPE)","rooms":(INSERT_ROOMS_NUMBER),"phone":"(INSERT_PHONE_NUMBER)","website":"(INSER_WEBSITE)","email":"(INSERT_EMAIL)"}</P>
+
+      <P> DELETE METHOD FUNCTIONS:
+      <P>Release room: http://localhost/hotelSabana/public/api/hotels/reservation/delete/(HOTEL_ID,ROOM_ID,START_RESERVATION_DATE)
+      <P>Delete hotel: http://localhost/hotelSabana/public/api/hotels/deleteHotel/(HOTEL_ID)/key/(API_KEY)
+
+
+  </BODY>
+  </HTML>';
 
 });

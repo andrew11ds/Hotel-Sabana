@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-04-2020 a las 03:40:42
+-- Tiempo de generación: 29-04-2020 a las 04:30:55
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.4
 
@@ -46,17 +46,6 @@ CREATE TABLE `date` (
   `date_start` varchar(50) NOT NULL,
   `date_end` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `date`
---
-
-INSERT INTO `date` (`date_id`, `hotel_id`, `room_id`, `date_start`, `date_end`) VALUES
-(2, 1, 5, '10 April 2020', '15 April 2020'),
-(3, 1, 5, '5 February 2020', '10 February 2020'),
-(4, 1, 7, '31 May 2020', '3 June 2020'),
-(5, 1, 8, '7 September 2020', '8 September 2020'),
-(18, 1, 7, '7 February 2020', '8 February 2020');
 
 -- --------------------------------------------------------
 
@@ -33643,7 +33632,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `date`
 --
 ALTER TABLE `date`
-  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `date_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT de la tabla `hotels`
@@ -33655,7 +33644,7 @@ ALTER TABLE `hotels`
 -- AUTO_INCREMENT de la tabla `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `reservation_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `reservation_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
