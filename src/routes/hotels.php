@@ -164,25 +164,35 @@ $app ->get('/api/hotels/location/{lat},{long},{radius}',function(Request $reques
 
   $address = json_decode($curlData);
 
-
   try {
+
+      $array2 = array();
+      $i = 0;
       if (!empty($address) and ($address -> status != 'ZERO_RESULTS') and ($address -> status != 'INVALID_REQUEST')) {
-        $Hname = $address -> results[0] -> name;
 
-        $sql = "SELECT * FROM hotels where '$Hname' = hotels.name";//Codigo de MYSQL
+        $db =new db();//Se llama a la base de datos
+        $db =$db ->connectDB();//Se conecta a la base de datos
 
-      $db =new db();//Se llama a la base de datos
-      $db =$db ->connectDB();//Se conecta a la base de datos
+        foreach ($address -> results as $value) {
+          $Hname = $value-> name;
+          $sql = "SELECT * FROM hotels where '$Hname' = hotels.name";//Codigo de MYSQL
 
-      $resultado = $db->query($sql);//Se hace query
-      if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
-        $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
-        echo json_encode($hotels);//Se muestran los hoteles en formato JSON
-      }else{
-        echo json_encode("No hotels found");
-      }
-      $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
-      $db =null;
+          $resultado = $db->query($sql);//Se hace query
+          if ($resultado->rowCount()>0) {//Metodo contador de COLUMNAS
+            $hotels= $resultado->fetchAll(PDO::FETCH_OBJ);
+            $array2[$i] = $hotels[0];
+          }
+
+        }
+
+        if (!empty($array2)) {
+          echo json_encode($array2);
+        }else {
+          echo json_encode("No hotels found");
+        }
+
+        $resultado =null;//Se debe poner en null el resultado y la base de datos despues de un query
+        $db =null;
     }else{
       echo json_encode("No hotels found");
     }
